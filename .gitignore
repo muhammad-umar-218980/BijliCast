@@ -1,0 +1,17 @@
+Tormenta (friends project)
+
+.gitignore
+
+# Processed datasets - regenerable via src/data_prep.py
+data/processed/
+
+# Scratch notes
+plan.txt
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter / Anaconda artifacts
+.ipynb_checkpoints/
+anaconda_projects/
