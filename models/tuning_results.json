@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T16:12:28",
+  "generated_at": "2026-11-22T00:07:11",
   "cv": "TimeSeriesSplit(n_splits=5, gap=120)",
   "scoring": "neg_mean_absolute_error",
   "selection_split": "train only (cross-validation)",
@@ -18,14 +18,14 @@
       "best_cv_std": 0.0654,
       "best_cv_train_mae": 0.1975,
       "cv_overfit_gap": 0.021699999999999997,
-      "elapsed_seconds": 107.4,
+      "elapsed_seconds": 149.6,
       "candidates": [
         {
           "rank": 1,
           "train_mae": 0.1975,
           "test_mae": 0.2192,
           "std_test_mae": 0.0654,
-          "fit_seconds": 10.65,
+          "fit_seconds": 12.6,
           "params": {
             "fit_intercept": false,
             "positive": true
@@ -36,7 +36,7 @@
           "train_mae": 0.1975,
           "test_mae": 0.2192,
           "std_test_mae": 0.0654,
-          "fit_seconds": 14.48,
+          "fit_seconds": 29.09,
           "params": {
             "fit_intercept": true,
             "positive": true
@@ -47,7 +47,7 @@
           "train_mae": 0.1975,
           "test_mae": 0.2212,
           "std_test_mae": 0.0651,
-          "fit_seconds": 12.62,
+          "fit_seconds": 16.06,
           "params": {
             "fit_intercept": false,
             "positive": false
@@ -58,7 +58,7 @@
           "train_mae": 0.1975,
           "test_mae": 0.2212,
           "std_test_mae": 0.0651,
-          "fit_seconds": 11.13,
+          "fit_seconds": 20.43,
           "params": {
             "fit_intercept": true,
             "positive": false
@@ -80,14 +80,14 @@
       "best_cv_std": 0.0985,
       "best_cv_train_mae": -0.0,
       "cv_overfit_gap": 0.2961,
-      "elapsed_seconds": 107.5,
+      "elapsed_seconds": 161.9,
       "candidates": [
         {
           "rank": 1,
           "train_mae": -0.0,
           "test_mae": 0.2961,
           "std_test_mae": 0.0985,
-          "fit_seconds": 0.29,
+          "fit_seconds": 0.32,
           "params": {
             "weights": "distance",
             "p": 1,
@@ -99,7 +99,7 @@
           "train_mae": 0.0,
           "test_mae": 0.2961,
           "std_test_mae": 0.092,
-          "fit_seconds": 0.29,
+          "fit_seconds": 0.27,
           "params": {
             "weights": "distance",
             "p": 2,
@@ -111,7 +111,7 @@
           "train_mae": 0.176,
           "test_mae": 0.2975,
           "std_test_mae": 0.0993,
-          "fit_seconds": 0.51,
+          "fit_seconds": 0.34,
           "params": {
             "weights": "uniform",
             "p": 1,
@@ -123,7 +123,7 @@
           "train_mae": 0.2078,
           "test_mae": 0.3015,
           "std_test_mae": 0.1073,
-          "fit_seconds": 0.31,
+          "fit_seconds": 0.33,
           "params": {
             "weights": "uniform",
             "p": 1,
@@ -135,7 +135,7 @@
           "train_mae": -0.0,
           "test_mae": 0.3128,
           "std_test_mae": 0.1168,
-          "fit_seconds": 0.21,
+          "fit_seconds": 0.31,
           "params": {
             "weights": "distance",
             "p": 1,
@@ -159,14 +159,14 @@
       "best_cv_std": 0.0671,
       "best_cv_train_mae": 0.1452,
       "cv_overfit_gap": 0.0716,
-      "elapsed_seconds": 490.2,
+      "elapsed_seconds": 674.3,
       "candidates": [
         {
           "rank": 1,
           "train_mae": 0.1452,
           "test_mae": 0.2168,
           "std_test_mae": 0.0671,
-          "fit_seconds": 64.62,
+          "fit_seconds": 109.45,
           "params": {
             "n_estimators": 120,
             "min_samples_leaf": 10,
@@ -179,7 +179,7 @@
           "train_mae": 0.1508,
           "test_mae": 0.2187,
           "std_test_mae": 0.0665,
-          "fit_seconds": 27.75,
+          "fit_seconds": 35.93,
           "params": {
             "n_estimators": 80,
             "min_samples_leaf": 10,
@@ -192,7 +192,7 @@
           "train_mae": 0.1242,
           "test_mae": 0.2194,
           "std_test_mae": 0.0666,
-          "fit_seconds": 48.01,
+          "fit_seconds": 44.04,
           "params": {
             "n_estimators": 80,
             "min_samples_leaf": 5,
@@ -205,7 +205,7 @@
           "train_mae": 0.0925,
           "test_mae": 0.2226,
           "std_test_mae": 0.0679,
-          "fit_seconds": 43.75,
+          "fit_seconds": 77.83,
           "params": {
             "n_estimators": 120,
             "min_samples_leaf": 2,
@@ -218,7 +218,7 @@
           "train_mae": 0.0838,
           "test_mae": 0.2232,
           "std_test_mae": 0.067,
-          "fit_seconds": 119.29,
+          "fit_seconds": 98.77,
           "params": {
             "n_estimators": 80,
             "min_samples_leaf": 2,
@@ -244,14 +244,14 @@
       "best_cv_std": 0.0667,
       "best_cv_train_mae": 0.1725,
       "cv_overfit_gap": 0.04550000000000001,
-      "elapsed_seconds": 155.0,
+      "elapsed_seconds": 211.4,
       "candidates": [
         {
           "rank": 1,
           "train_mae": 0.1725,
           "test_mae": 0.218,
           "std_test_mae": 0.0667,
-          "fit_seconds": 11.43,
+          "fit_seconds": 16.06,
           "params": {
             "min_samples_leaf": 50,
             "max_leaf_nodes": 31,
@@ -265,7 +265,7 @@
           "train_mae": 0.1751,
           "test_mae": 0.2187,
           "std_test_mae": 0.0662,
-          "fit_seconds": 20.27,
+          "fit_seconds": 31.36,
           "params": {
             "min_samples_leaf": 50,
             "max_leaf_nodes": 31,
@@ -279,7 +279,7 @@
           "train_mae": 0.1703,
           "test_mae": 0.2201,
           "std_test_mae": 0.0678,
-          "fit_seconds": 18.46,
+          "fit_seconds": 11.71,
           "params": {
             "min_samples_leaf": 50,
             "max_leaf_nodes": 31,
@@ -293,7 +293,7 @@
           "train_mae": 0.1703,
           "test_mae": 0.2201,
           "std_test_mae": 0.0678,
-          "fit_seconds": 18.38,
+          "fit_seconds": 15.74,
           "params": {
             "min_samples_leaf": 50,
             "max_leaf_nodes": 31,
@@ -307,7 +307,7 @@
           "train_mae": 0.1809,
           "test_mae": 0.2205,
           "std_test_mae": 0.0691,
-          "fit_seconds": 8.46,
+          "fit_seconds": 12.9,
           "params": {
             "min_samples_leaf": 20,
             "max_leaf_nodes": 15,
