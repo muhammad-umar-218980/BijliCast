@@ -1,0 +1,46 @@
+column,dtype,role,missing_pct,n_unique,min,median,mean,max
+datetime,datetime64[us],id,0.0,11856,,,,
+house_id,str,id,0.0,59,,,,
+city,str,feature,0.0,6,,,,
+next_hour_energy_kwh,float64,target,0.0,439356,0.0,0.4361,0.7315,12.6618
+lag_1h,float64,feature,0.0,439351,0.0,0.4361,0.7316,12.6618
+lag_2h,float64,feature,0.0,439346,0.0,0.4361,0.7316,12.6618
+lag_3h,float64,feature,0.0,439342,0.0,0.4361,0.7316,12.6618
+lag_24h,float64,feature,0.0,439241,0.0,0.4358,0.7315,12.6618
+lag_168h,float64,feature,0.0,438292,0.0,0.434,0.7289,12.6618
+rolling_mean_3h,float64,feature,0.0,451349,0.0,0.4673,0.7316,11.9275
+rolling_mean_24h,float64,feature,0.0,461854,0.0,0.5006,0.7316,7.1718
+rolling_std_24h,float64,feature,0.0,464646,0.0,0.2895,0.4116,3.6656
+temperature,float64,feature,0.0,563,-10.4,23.3,21.7629,47.0
+humidity,int64,feature,0.0,96,5.0,61.0,59.9818,100.0
+dew,float64,feature,0.0,502,-23.4,11.9,12.3142,28.7
+precipitation,float64,feature,0.0,117,0.0,0.0,0.0877,19.9
+wind_speed,float64,feature,0.0,395,0.0,6.8,8.4271,46.6
+wind_direction,int64,feature,0.0,360,1.0,236.0,206.1256,360.0
+pressure,float64,feature,0.0,1153,761.6,978.9,950.7852,1023.4
+solar_radiation,float64,feature,0.0,1046,0.0,11.0,203.8669,1090.0
+wind_dir_sin,float64,feature,0.0,318,-1.0,-0.3746,-0.1715,1.0
+wind_dir_cos,float64,feature,0.0,318,-1.0,0.3256,0.1849,1.0
+No. of people (Temp+Perm),float64,feature,1.7892,12,0.0,6.0,6.2215,25.0
+No. of Adults (14-60),float64,feature,1.7892,10,0.0,3.0,3.7749,16.0
+No. of Children (0-13),float64,feature,1.7892,6,0.0,1.0,1.3537,5.0
+Property Area (Marla),float64,feature,1.7892,30,2.5,10.4,17.3606,65.0
+Covered Area,float64,feature,1.7892,26,2.0,9.0,11.9912,120.0
+No of Floors,int64,feature,0.0,6,1.0,2.0,2.2604,15.0
+No. of rooms,float64,feature,1.7892,10,2.0,5.0,5.5748,11.0
+Air Conditioners,float64,feature,1.7892,10,0.0,3.0,3.1181,12.0
+Air Coolers,int64,feature,0.0,3,0.0,0.0,0.3976,2.0
+Refrigerators,float64,feature,1.7892,4,0.0,1.0,1.3063,3.0
+Washing Machines,int64,feature,0.0,2,1.0,1.0,1.0331,2.0
+Celling Fans,float64,feature,1.7892,16,0.0,7.0,7.1345,20.0
+Wall Fans,float64,feature,1.7892,6,0.0,0.0,0.5763,6.0
+Water Pumps,float64,feature,1.7892,3,0.0,1.0,0.6967,2.0
+Geysers,float64,feature,1.7892,4,0.0,0.0,0.607,3.0
+Electric heaters,float64,feature,1.7892,5,0.0,0.0,0.5604,5.0
+UPS,float64,feature,1.7892,3,0.0,0.0,0.4707,2.0
+Build year of house,float64,feature,1.7892,29,1960.0,2010.0,2007.5314,2022.0
+Owner/Rented,str,feature,0.0,3,,,,
+hour,int8,feature,0.0,24,0.0,11.0,11.4922,23.0
+day_of_week,int8,feature,0.0,7,0.0,3.0,2.9973,6.0
+month,int8,feature,0.0,12,1.0,6.0,6.4401,12.0
+is_weekend,int8,feature,0.0,2,0.0,0.0,0.2851,1.0
