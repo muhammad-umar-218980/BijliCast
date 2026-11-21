@@ -21,14 +21,14 @@ Legend: ✅ done · 🔄 in progress · ⏳ pending
 | 2 | EDA — distributions, missing, outliers, correlations, balance, ≥5 plots | ✅ done |
 | 3 | Preprocessing & feature engineering — inside a Pipeline, train-only fit | ✅ done |
 | 4 | Split — train/validation/test 70/15/15, time-ordered | ✅ done |
-| 5 | Modelling — simple baseline + ≥3 course algorithms | ⏳ next |
-| 6 | Tuning — 5-fold CV with GridSearchCV / RandomizedSearchCV | ⏳ pending |
-| 7 | Evaluation — MAE/RMSE/R² once on test + over/under-fitting discussion | ⏳ pending |
-| 8 | Save — joblib pipeline + pinned requirements | 🔄 in progress |
-| 9 | Deployment — Streamlit Cloud, Hugging Face Spaces, FastAPI + HTML | ⏳ pending |
+| 5 | Modelling — simple baseline + ≥3 course algorithms | ✅ done |
+| 6 | Tuning — 5-fold CV with GridSearchCV / RandomizedSearchCV | ✅ done |
+| 7 | Evaluation — MAE/RMSE/R² once on test + over/under-fitting discussion | ✅ done |
+| 8 | Save — joblib pipeline + pinned requirements | ✅ done |
+| 9 | Deployment — Streamlit Cloud, Hugging Face Spaces, FastAPI + HTML | 🔄 in progress |
 | 10 | Report, README, demo & viva | ⏳ pending |
 
-**Overall:** Phases 0–4 complete. Phase 5 is the immediate next task.
+**Overall:** Phases 0–8 complete. Phase 9: Streamlit, Hugging Face Space bundle and FastAPI + HTML are built and locally browser-verified; only the public URLs need the user's GitHub/HF accounts. Phase 10 (report/demo) remains.
 
 ---
 
@@ -83,41 +83,66 @@ Legend: ✅ done · 🔄 in progress · ⏳ pending
 - [x] `notebooks/07_data_splitting.ipynb` executed
 - [x] Test set untouched for modelling
 
-## Phase 5 — Modelling ⏳ (next)
+## Phase 5 — Modelling ✅
 
-- [ ] Naive persistence baseline (`lag_1h`, `lag_24h`)
-- [ ] Linear Regression
-- [ ] K-Nearest Neighbours
-- [ ] Random Forest
-- [ ] HistGradientBoosting
-- [ ] Train on train, select on validation
+- [x] Naive persistence baseline (`lag_1h`, `lag_24h`) + train mean
+- [x] Linear Regression
+- [x] K-Nearest Neighbours
+- [x] Random Forest
+- [x] HistGradientBoosting
+- [x] Train on train, select on validation
+- [x] `notebooks/08_baseline_model.ipynb` and `09_model_training.ipynb` executed
+- [x] Validation MAE: persistence **0.3448**; HistGB 0.3261, RF 0.3307, LR 0.3336, KNN 0.4094
+- [x] `reports/tables/baseline_metrics.csv`, `model_comparison_untuned.csv`
 
-## Phase 6 — Tuning ⏳
+## Phase 6 — Tuning ✅
 
-- [ ] `TimeSeriesSplit(n_splits=5)` on training data only
-- [ ] `RandomizedSearchCV` / `GridSearchCV` with the full pipeline
-- [ ] Best configuration per algorithm
+- [x] `TimeSeriesSplit(n_splits=5, gap=120)` on training data only
+- [x] `GridSearchCV` (Linear Regression) and `RandomizedSearchCV` (KNN/RF/HistGB) with the full pipeline
+- [x] Best configuration per algorithm → `models/tuning_results.json`
+- [x] Best CV MAE: RF **0.2168**, HistGB 0.2180, LR 0.2192, KNN 0.2961
+- [x] `reports/tables/cv_results_*.csv` + `notebooks/10_hyperparameter_tuning.ipynb` executed
 
-## Phase 7 — Evaluation ⏳
+## Phase 7 — Evaluation ✅
 
-- [ ] MAE, RMSE, R² reported **once** on test
-- [ ] Model comparison table → `reports/tables/model_comparison.csv`
-- [ ] Over/under-fitting discussion (train vs validation gaps)
-- [ ] Error analysis and prediction intervals
-- [ ] Seasonality caveat (validation is summer: mean 1.12 vs train 0.63)
+- [x] MAE, RMSE, R² reported **once** on test: **MAE 0.2535, RMSE 0.4322, R² 0.7229**
+- [x] Model comparison table → `reports/tables/model_comparison.csv`
+- [x] Over/under-fitting discussion (train vs validation vs test gaps in notebook 11)
+- [x] Error analysis by hour / city / household / month + 90% prediction intervals
+- [x] Seasonality caveat (validation is summer: mean 1.12 vs train 0.63; test 0.84)
+- [x] Random Forest beats persistence on test (0.2535 vs 0.2760 MAE, 8.2% lower)
+- [x] Interval coverage: validation 90.0%, test 93.5%
+- [x] `notebooks/11_final_evaluation.ipynb` executed
 
-## Phase 8 — Save 🔄
+## Phase 8 — Save ✅
 
 - [x] Pinned `requirements.txt`
-- [ ] `models/best_model.joblib` (full pipeline)
-- [ ] `models/model_metadata.json` (metrics, feature list, interval width)
+- [x] `models/best_model.joblib` (full pipeline, fitted on train)
+- [x] `models/deployment_model.joblib` (same config refit on train+val)
+- [x] `models/model_metadata.json` (metrics, feature list, interval width, versions)
+- [x] Joblib reload reproduces the saved test predictions
 
-## Phase 9 — Deployment ⏳
+## Phase 9 — Deployment 🔄
 
-- [ ] Streamlit Community Cloud (public URL)
-- [ ] Hugging Face Space (model card + live app)
-- [ ] FastAPI `/predict` + HTML front end
-- [ ] Input validation, error messages, prediction interval
+- [x] Compact deployment artifact `models/deployment_model.joblib` (HistGradientBoosting, 1.4 MB)
+- [x] App data bundle: `usage_history.parquet`, `latest_weather.csv`, `app_manifest.json`
+- [x] Shared inference service `app/service.py` (one contract for all three deployments)
+- [x] Streamlit UI `app/streamlit_ui.py` + entry point `app/streamlit_app.py`
+- [x] Streamlit theme `.streamlit/config.toml` (blue, viewer toolbar)
+- [x] Streamlit verified in a real browser: 0.526 kWh, interval 0.00–1.37, no console/network errors
+- [x] FastAPI `app/api.py`: `GET /`, `/health`, `/houses`, `POST /predict`, `/docs`
+- [x] Pydantic weather validation (422), unknown-house handling (404)
+- [x] HTML front end `app/static/index.html` (house selector, weather inputs, interval, SVG chart)
+- [x] FastAPI verified: 59 houses, prediction 0.585 kWh, 404/422 paths, browser screenshot
+- [x] Hugging Face Space bundle `deploy/huggingface/` (~1.6 MB) + model card
+- [x] HF Space sync script `python -m src.deploy.export_hf_space` with in-folder self-check
+- [x] HF Space bundle verified locally on port 8502 in a browser
+- [x] `streamlit`, `fastapi`, `uvicorn`, `pydantic` pinned in `requirements.txt`
+- [x] README: local run + all three deployment instructions
+- [ ] Streamlit Community Cloud public URL — **needs the user's GitHub push + Streamlit account**
+- [ ] Hugging Face Space public URL — **needs the user's HF account/upload**
+- [ ] FastAPI public hosting (optional; local/uvicorn is verified)
+- [x] Large RF artifact `models/best_model.joblib` git-ignored (270 MB > GitHub limit)
 
 ## Phase 10 — Report & demo ⏳
 
@@ -134,10 +159,10 @@ Legend: ✅ done · 🔄 in progress · ⏳ pending
 | 1 | EDA incl. ≥5 plots | ✅ | notebooks 01–05, 25 figures |
 | 2 | Preprocessing in Pipeline, train-only | ✅ | `src/preprocessing/pipeline.py`, notebook 07 |
 | 3 | Train/val/test 70/15/15, time-ordered | ✅ | `src/preprocessing/split.py`, `split_summary.json` |
-| 4 | Baseline + ≥3 algorithms | ⏳ | Phase 5 |
-| 5 | 5-fold CV + GridSearch/RandomizedSearch | ⏳ | Phase 6 |
-| 6 | MAE/RMSE/R² once on test + fit discussion | ⏳ | Phase 7 |
-| 7 | joblib + pinned requirements | 🔄 | requirements ✅, joblib pending |
+| 4 | Baseline + ≥3 algorithms | ✅ | Phase 5, notebooks 08–09 |
+| 5 | 5-fold CV + GridSearch/RandomizedSearch | ✅ | Phase 6, `tuning_results.json`, notebook 10 |
+| 6 | MAE/RMSE/R² once on test + fit discussion | ✅ | Phase 7, notebook 11, `test_metrics.csv` |
+| 7 | joblib + pinned requirements | ✅ | `best_model.joblib`, `deployment_model.joblib`, `model_metadata.json` |
 
 ## Deliverables checklist (guidelines)
 
@@ -145,8 +170,8 @@ Legend: ✅ done · 🔄 in progress · ⏳ pending
 - [x] `requirements.txt`
 - [x] Data provenance + download scripts (`src/data/`, `src/data_prep.py`)
 - [x] `models/house_profiles.csv`
-- [ ] `models/*.joblib`
-- [ ] `app/` (three deployments)
+- [x] `models/*.joblib`
+- [x] `app/` (three deployments)
 - [ ] README with setup + three links
 - [ ] Report PDF
 - [ ] Demo + viva

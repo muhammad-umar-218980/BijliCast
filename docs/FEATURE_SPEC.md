@@ -211,5 +211,6 @@ python -m src.features.inference          # profiles + parity check
 - [x] Leak-free feature engineering and pipeline
 - [x] Chronological 70/15/15 split with boundary purge
 - [x] Deployment artifacts defined
-- [ ] Models, tuning, test metrics (Phase 4)
-- [ ] Three live deployments (Phase 5)
+- [x] Models, tuning, one-shot test metrics (phases 5–8)
+- [x] Joblib pipeline + metadata saved
+- [ ] Three live deployments (phase 9)
