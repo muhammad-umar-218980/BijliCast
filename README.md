@@ -77,6 +77,28 @@ python -m pip install -r requirements.txt
 
 Python 3.13 is used for training; the pinned versions are in `requirements.txt`.
 
+## Verify the checkout
+
+Run the end-to-end verifier before deploying or submitting:
+
+```bash
+python src/verify_all.py
+```
+
+It checks the tracked model artifacts, the metadata deployment block, a service
+prediction for all 59 houses, the FastAPI endpoints, notebook validity, and —
+when the git-ignored `data/processed/` files are present — the split summary,
+train/serve parity, and the pipeline smoke test.
+
+Unit/API tests live in `tests/`:
+
+```bash
+pytest -q
+```
+
+On a fresh clone the data-dependent tests skip automatically because
+`data/processed/` is git-ignored.
+
 ## Run the Streamlit app locally
 
 ```bash
@@ -233,4 +255,17 @@ report.
   (Oct–Nov 2024), so the demo is a realistic replay rather than a live meter.
 - The model is global (one model for all 59 houses) with city/static features;
   per-house models were not used.
+- `House#32` is missing 15 of its 18 static numeric fields. Its 8,592 rows
+  (1.79% of the dataset) are median-imputed inside the pipeline, and it has the
+  second-worst test MAE (0.6045 kWh) while also having the highest mean usage
+  (2.5375 kWh). This is a data-quality caveat, not a modelling result.
+- KNN uses `weights="distance"`, so its training predictions are exact
+  (train MAE 0.0, R² 1.0). Its validation/test metrics are the meaningful ones;
+  the train row should not be read as evidence of leakage.
+- The test split covers 48 of the 59 households because households end on
+  different dates. Test metrics are therefore not equally weighted across all
+  houses.
+- Tuning uses time-ordered subsamples (KNN 20k, RF 40k, HGB 150k rows) and five
+  random candidates per model. `TimeSeriesSplit(gap=120)` is expressed in rows,
+  not hours. These are documented compute guards, not an exhaustive search.
 - Predictions are for research/demo purposes, not billing or grid operations.
