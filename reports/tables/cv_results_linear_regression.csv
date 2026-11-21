@@ -1,0 +1,5 @@
+rank_test_score,mean_train_mae,mean_test_mae,std_test_mae,mean_fit_time,params
+1,0.1975,0.2192,0.0654,10.65,"{'model__fit_intercept': False, 'model__positive': True}"
+2,0.1975,0.2192,0.0654,14.48,"{'model__fit_intercept': True, 'model__positive': True}"
+3,0.1975,0.2212,0.0651,12.62,"{'model__fit_intercept': False, 'model__positive': False}"
+4,0.1975,0.2212,0.0651,11.13,"{'model__fit_intercept': True, 'model__positive': False}"

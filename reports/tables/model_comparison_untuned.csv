@@ -1,0 +1,5 @@
+model,n_train,fit_seconds,train_mae,val_mae,mae_gap_val_minus_train,train_rmse,val_rmse,train_r2,val_r2
+HistGradientBoosting,336053,50.69,0.196,0.3261,0.1301,0.3636,0.517,0.8095,0.7582
+Random Forest,336053,787.36,0.088,0.3307,0.2427,0.1796,0.5162,0.9535,0.7589
+Linear Regression,336053,7.19,0.2164,0.3336,0.1172,0.412,0.5419,0.7554,0.7343
+KNN,40000,0.4,0.0,0.4094,0.4094,0.0,0.6144,1.0,0.6585

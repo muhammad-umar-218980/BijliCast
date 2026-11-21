@@ -1,0 +1,6 @@
+rank_test_score,mean_train_mae,mean_test_mae,std_test_mae,mean_fit_time,params
+1,-0.0,0.2961,0.0985,0.29,"{'model__weights': 'distance', 'model__p': 1, 'model__n_neighbors': 5}"
+2,0.0,0.2961,0.092,0.29,"{'model__weights': 'distance', 'model__p': 2, 'model__n_neighbors': 25}"
+3,0.176,0.2975,0.0993,0.51,"{'model__weights': 'uniform', 'model__p': 1, 'model__n_neighbors': 5}"
+4,0.2078,0.3015,0.1073,0.31,"{'model__weights': 'uniform', 'model__p': 1, 'model__n_neighbors': 15}"
+5,-0.0,0.3128,0.1168,0.21,"{'model__weights': 'distance', 'model__p': 1, 'model__n_neighbors': 40}"
