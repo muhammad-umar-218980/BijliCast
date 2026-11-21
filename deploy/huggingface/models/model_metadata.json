@@ -305,6 +305,7 @@
     },
     "n_train_rows": 408048,
     "fit_data": "train + validation (test never used for fitting)",
+    "metrics_source": "Metrics come from the train-fit HGB evaluated on the validation and test splits. The served artifact is refit on train+val, so these are honest out-of-sample estimates for the same configuration, not a second test evaluation of the deployed artifact.",
     "metrics": {
       "test": {
         "n": 72059,

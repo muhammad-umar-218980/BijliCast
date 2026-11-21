@@ -108,7 +108,6 @@ def run(root: str | Path | None = None) -> None:
         st.error(f"Could not load the deployment bundle: {exc}")
         st.stop()
 
-    deployment = service.metadata.get("deployment_model", {})
     model_info = service.model_info()
     houses = service.houses()
     by_house = {h["house_id"]: h for h in houses}
@@ -135,10 +134,13 @@ def run(root: str | Path | None = None) -> None:
             st.write(f"Held-out test MAE: **{model_info['test_mae']:.3f} kWh**")
         if model_info["test_r2"] is not None:
             st.write(f"Test R²: **{model_info['test_r2']:.3f}**")
+        coverage = model_info["interval_val_coverage"]
+        coverage_text = (
+            f"{coverage:.0%} coverage" if coverage is not None else "coverage unavailable"
+        )
         st.caption(
             f"Trained on {model_info['n_train_rows']:,} rows. "
-            "Prediction interval from validation residuals "
-            f"({model_info['interval_val_coverage']:.0%} coverage)."
+            f"Prediction interval from validation residuals ({coverage_text})."
         )
         st.divider()
         st.caption(
@@ -254,12 +256,17 @@ def run(root: str | Path | None = None) -> None:
         ax.grid(alpha=0.3)
         fig.autofmt_xdate()
         st.pyplot(fig)
+        plt.close(fig)
 
+        test_mae = model_info["test_mae"]
+        test_mae_text = f"{test_mae:.3f} kWh" if test_mae is not None else "n/a"
+        coverage = model_info["interval_val_coverage"]
+        coverage_text = (
+            f"{coverage:.0%} coverage" if coverage is not None else "coverage unavailable"
+        )
         st.caption(
-            f"Model: {model_info['name']} · test MAE "
-            f"{model_info['test_mae']:.3f} kWh · interval calibrated on "
-            f"validation residuals "
-            f"({model_info['interval_val_coverage']:.0%} coverage)."
+            f"Model: {model_info['name']} · test MAE {test_mae_text} · "
+            f"interval calibrated on validation residuals ({coverage_text})."
         )
     else:
         st.info(

@@ -97,9 +97,6 @@ NUMERIC_FEATURES = (
 CATEGORICAL_FEATURES = list(STATIC_CATEGORICAL_FEATURES)
 FEATURE_COLUMNS = NUMERIC_FEATURES + CATEGORICAL_FEATURES
 
-# Row-local features created INSIDE the saved pipeline from datetime / wind_direction.
-DERIVED_FEATURES = CALENDAR_FEATURES + ["wind_dir_sin", "wind_dir_cos"]
-
 # Raw frame accepted by the pipeline. Lag/rolling columns are deterministic,
 # causal history features; everything else comes straight from the user/app.
 INPUT_COLUMNS = (
@@ -110,9 +107,6 @@ INPUT_COLUMNS = (
     + STATIC_NUMERIC_FEATURES
     + STATIC_CATEGORICAL_FEATURES
 )
-
-# Columns that are identifiers or the label - never model inputs.
-NON_FEATURE_COLUMNS = [TIME_COL, HOUSE_COL, TARGET]
 
 # Rows missing any of these cannot be built without fabricating history.
 REQUIRED_HISTORY = LAG_FEATURES + ROLLING_FEATURES + [TARGET]
