@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BijliCast · next-hour electricity forecast</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --ink: #0f172a;
+    --muted: #5b6b84;
+    --line: #dbe4f0;
+    --card: #ffffff;
+    --bg: #f3f7fc;
+    --blue: #0b5cad;
+    --blue-dark: #073f77;
+    --sky: #0ea5e9;
+    --amber: #f59e0b;
+    --red: #dc2626;
+    --green: #0f9d76;
+    --shadow: 0 18px 45px rgba(15, 42, 76, .10);
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(1100px 480px at 12% -12%, #dbeafe 0%, transparent 62%),
+      radial-gradient(900px 420px at 95% 0%, #ccfbf1 0%, transparent 55%),
+      var(--bg);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 40px; }
+
+  /* ---------------------------------------------------------------- hero */
+  .hero {
+    background: linear-gradient(120deg, #073f77 0%, #0b5cad 48%, #0e7490 100%);
+    color: #fff;
+    border-radius: 26px;
+    padding: 30px 34px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    width: 360px; height: 360px;
+    right: -120px; top: -170px;
+    background: radial-gradient(circle, rgba(255,255,255,.20), transparent 68%);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .02em; }
+  .brand .bolt {
+    display: inline-grid; place-items: center;
+    width: 34px; height: 34px; border-radius: 10px;
+    background: rgba(255,255,255,.16);
+    font-size: 19px;
+  }
+  h1 { margin: 14px 0 6px; font-size: clamp(26px, 3.4vw, 38px); line-height: 1.15; }
+  .hero p { margin: 0; max-width: 790px; color: #dbeafe; font-size: 15.5px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .badge {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.22);
+    padding: 5px 11px; border-radius: 999px;
+    font-size: 12.5px; color: #eaf2ff;
+    backdrop-filter: blur(4px);
+  }
+  .badge b { color: #fff; }
+  .online { color: #bbf7d0; }
+
+  /* -------------------------------------------------------------- layout */
+  main {
+    display: grid;
+    grid-template-columns: minmax(330px, 430px) minmax(0, 1fr);
+    gap: 20px;
+    margin-top: 22px;
+    align-items: start;
+  }
+  @media (max-width: 880px) { main { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 30px rgba(15, 42, 76, .06);
+    padding: 22px;
+  }
+  h2 { font-size: 16px; margin: 0 0 4px; }
+  .hint { color: var(--muted); font-size: 12.5px; margin: 0 0 14px; }
+  .section-label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--blue);
+    margin: 22px 0 10px;
+  }
+  .section-label::after { content: ""; height: 1px; flex: 1; background: var(--line); }
+
+  label { font-size: 12px; font-weight: 650; color: #31435c; display: block; margin-bottom: 5px; }
+
+  select, input[type="number"] {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid #c9d6e8;
+    border-radius: 10px;
+    background: #fbfdff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  select:focus, input[type="number"]:focus {
+    border-color: var(--sky);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, .16);
+  }
+  .field { margin-bottom: 10px; }
+  .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+
+  .profile-strip {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 8px; margin: 5px 0 4px;
+  }
+  .chip {
+    background: #f1f7ff; border: 1px solid #dce9fa;
+    border-radius: 12px; padding: 9px 10px;
+  }
+  .chip span { display: block; font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .chip b { font-size: 14px; color: var(--blue-dark); }
+
+  details {
+    margin-top: 10px; border: 1px solid var(--line);
+    border-radius: 12px; background: #fbfdff;
+  }
+  summary { cursor: pointer; padding: 10px 12px; font-size: 12.5px; font-weight: 650; color: #31435c; }
+  details table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  details th, details td { padding: 6px 12px; border-top: 1px solid #e8eff8; text-align: left; }
+  details th { color: var(--muted); font-weight: 550; }
+  details td { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .actions { display: flex; gap: 9px; margin-top: 16px; }
+  button {
+    font: inherit; font-weight: 700; cursor: pointer;
+    border-radius: 11px; padding: 11px 16px;
+    transition: transform .12s, box-shadow .15s, background .15s;
+  }
+  #predict {
+    flex: 1; border: 0; color: #fff;
+    background: linear-gradient(135deg, #0b5cad, #0e7490);
+    box-shadow: 0 8px 20px rgba(11, 92, 173, .28);
+  }
+  #predict:hover { transform: translateY(-1px); }
+  #predict:disabled { opacity: .65; cursor: progress; transform: none; }
+  #reset {
+    border: 1px solid #c9d6e8; background: #fff; color: #31435c;
+  }
+  #reset:hover { background: #f5f9ff; }
+
+  .error {
+    display: none; margin-top: 12px; padding: 10px 12px;
+    border-radius: 10px; border: 1px solid #fecaca; background: #fef2f2;
+    color: #991b1b; font-size: 13px;
+  }
+
+  /* -------------------------------------------------------------- result */
+  .result-card { min-height: 520px; display: flex; flex-direction: column; }
+  .empty {
+    flex: 1; display: grid; place-items: center; text-align: center;
+    color: var(--muted); padding: 45px 20px;
+  }
+  .empty .icon {
+    width: 74px; height: 74px; margin: 0 auto 16px;
+    display: grid; place-items: center; font-size: 34px;
+    background: #eef6ff; border: 1px solid #dce9fa; border-radius: 22px;
+  }
+  .empty h3 { margin: 0 0 6px; color: var(--ink); font-size: 18px; }
+  .empty p { margin: 0; max-width: 360px; font-size: 13.5px; }
+
+  #result { display: none; }
+  .result-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+  .result-head .house { font-size: 13px; color: var(--muted); }
+  .result-head .house b { color: var(--ink); font-size: 15px; }
+  .big {
+    display: flex; align-items: baseline; gap: 8px;
+    margin: 15px 0 2px; color: var(--blue-dark);
+  }
+  .big .value { font-size: clamp(44px, 6vw, 62px); font-weight: 800; letter-spacing: -.03em; line-height: 1; }
+  .big .unit { font-size: 18px; font-weight: 650; color: var(--muted); }
+  .target { color: var(--muted); font-size: 13px; }
+  .target b { color: var(--ink); }
+
+  .three {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px; margin: 18px 0 6px;
+  }
+  @media (max-width: 560px) { .three { grid-template-columns: 1fr; } }
+  .stat { background: #f6faff; border: 1px solid #e1ecfa; border-radius: 13px; padding: 11px 12px; }
+  .stat span { display: block; color: var(--muted); font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em; }
+  .stat b { font-size: 16px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .stat .up { color: var(--red); }
+  .stat .down { color: var(--green); }
+
+  .chart-wrap { margin-top: 16px; border: 1px solid var(--line); border-radius: 13px; padding: 10px 8px 4px; background: #fff; }
+  .chart-head { display: flex; justify-content: space-between; align-items: center; padding: 0 6px 4px; }
+  .chart-head b { font-size: 13px; }
+  .legend { display: flex; gap: 12px; font-size: 11px; color: var(--muted); flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+  svg { width: 100%; height: auto; display: block; }
+
+  .model-note {
+    margin-top: 16px; padding: 11px 13px; border-radius: 12px;
+    background: #f8fafc; border: 1px dashed #cbd8e8;
+    color: var(--muted); font-size: 12px;
+  }
+  .model-note b { color: #31435c; }
+
+  footer {
+    margin-top: 22px; color: var(--muted); font-size: 12px;
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+  footer a { color: var(--blue); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="brand"><span class="bolt">⚡</span> BijliCast</div>
+    <h1>Next-hour household electricity forecast</h1>
+    <p>
+      Weather-aware short-term load forecasting for Pakistani households. The model
+      combines the last 168 hours of smart-meter usage with current-hour weather and
+      the household profile — no next-hour weather is required.
+    </p>
+    <div class="badges">
+      <span class="badge">Model&nbsp; <b id="badge-model">loading…</b></span>
+      <span class="badge">Held-out test MAE&nbsp; <b id="badge-mae">—</b></span>
+      <span class="badge">90% prediction interval</span>
+      <span class="badge online" id="status">● connecting</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- ------------------------------------------------------------ form -->
+    <section class="card">
+      <h2>Forecast inputs</h2>
+      <p class="hint">Pick a household, then adjust the current-hour weather for a what-if scenario.</p>
+
+      <label for="house">Household</label>
+      <select id="house" aria-label="Household"></select>
+
+      <div class="profile-strip" id="profile-strip" aria-label="Household summary"></div>
+
+      <details>
+        <summary>Household profile used by the model</summary>
+        <table><tbody id="profile-table"></tbody></table>
+      </details>
+
+      <div class="section-label">Current-hour weather</div>
+      <div class="weather-grid" id="weather-grid"></div>
+
+      <div class="actions">
+        <button id="predict" type="button">⚡ Predict next hour</button>
+        <button id="reset" type="button" title="Restore the last known weather">Reset</button>
+      </div>
+      <div class="error" id="error" role="alert"></div>
+    </section>
+
+    <!-- ---------------------------------------------------------- result -->
+    <section class="card result-card">
+      <div class="empty" id="empty">
+        <div>
+          <div class="icon">⚡</div>
+          <h3>Ready to forecast</h3>
+          <p>The next-hour prediction, its 90% interval and the last 72 hours of usage will appear here.</p>
+        </div>
+      </div>
+
+      <div id="result" aria-live="polite">
+        <div class="result-head">
+          <div class="house"><b id="result-house"></b><br><span id="result-city"></span></div>
+          <div class="house">origin <b id="result-origin"></b></div>
+        </div>
+
+        <div class="big">
+          <span class="value" id="result-value">0.000</span>
+          <span class="unit">kWh</span>
+        </div>
+        <div class="target">forecast for <b id="result-target">—</b></div>
+
+        <div class="three">
+          <div class="stat">
+            <span>90% interval</span>
+            <b id="result-interval">—</b>
+          </div>
+          <div class="stat">
+            <span>Change vs last hour</span>
+            <b id="result-delta">—</b>
+          </div>
+          <div class="stat">
+            <span>Last hour actual</span>
+            <b id="result-last">—</b>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="chart-head">
+            <b>Last 72 hours &amp; next-hour forecast</b>
+            <div class="legend">
+              <span><i style="background:#0ea5e9"></i>actual</span>
+              <span><i style="background:#dc2626"></i>forecast</span>
+              <span><i style="background:#f59e0b"></i>90% interval</span>
+            </div>
+          </div>
+          <svg id="chart" viewBox="0 0 760 280" role="img" aria-label="Last 72 hours of usage and the next-hour forecast"></svg>
+        </div>
+
+        <div class="model-note" id="model-note"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Data: LUMS REWD-P (59 households) · Open-Meteo ERA5 (6 cities). Research demo, not billing or grid operations.</span>
+    <span><a href="/docs">API docs</a> · <a href="/health">health</a></span>
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+const WEATHER = [
+  { key: "temperature",     label: "Temperature",      unit: "°C",   min: -10,  max: 50,   step: 0.5, digits: 1 },
+  { key: "humidity",        label: "Humidity",         unit: "%",    min: 0,    max: 100,  step: 1,   digits: 0 },
+  { key: "dew",             label: "Dew point",        unit: "°C",   min: -25,  max: 35,   step: 0.5, digits: 1 },
+  { key: "precipitation",   label: "Precipitation",    unit: "mm",   min: 0,    max: 25,   step: 0.1, digits: 1 },
+  { key: "wind_speed",      label: "Wind speed",       unit: "km/h", min: 0,    max: 50,   step: 0.5, digits: 1 },
+  { key: "wind_direction",  label: "Wind direction",   unit: "°",    min: 0,    max: 360,  step: 5,   digits: 0 },
+  { key: "pressure",        label: "Pressure",         unit: "hPa",  min: 700,  max: 1050, step: 1,   digits: 0 },
+  { key: "solar_radiation", label: "Solar radiation",  unit: "W/m²", min: 0,    max: 1100, step: 10,  digits: 0 }
+];
+
+const PROFILE_FIELDS = [
+  ["No. of people (Temp+Perm)", "People"],
+  ["No. of Adults (14-60)", "Adults (14–60)"],
+  ["No. of Children (0-13)", "Children (0–13)"],
+  ["Property Area (Marla)", "Property area (Marla)"],
+  ["Covered Area", "Covered area"],
+  ["No of Floors", "Floors"],
+  ["No. of rooms", "Rooms"],
+  ["Air Conditioners", "Air conditioners"],
+  ["Air Coolers", "Air coolers"],
+  ["Refrigerators", "Refrigerators"],
+  ["Washing Machines", "Washing machines"],
+  ["Celling Fans", "Ceiling fans"],
+  ["Wall Fans", "Wall fans"],
+  ["Water Pumps", "Water pumps"],
+  ["Geysers", "Geysers"],
+  ["Electric heaters", "Electric heaters"],
+  ["UPS", "UPS"],
+  ["Build year of house", "Build year"],
+  ["Owner/Rented", "Owner / rented"]
+];
+
+const state = { houses: [], meta: null, selected: null, busy: false };
+
+const $ = (id) => document.getElementById(id);
+
+function fmtTime(iso) {
+  if (!iso) return "—";
+  return iso.slice(0, 16).replace("T", " ");
+}
+
+function fmtNumber(value, digits) {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) return "n/a";
+  return Number(value).toLocaleString(undefined, {
+    minimumFractionDigits: digits === undefined ? 0 : digits,
+    maximumFractionDigits: digits === undefined ? 0 : digits
+  });
+}
+
+function showError(message) {
+  const box = $("error");
+  box.textContent = message;
+  box.style.display = message ? "block" : "none";
+}
+
+function setStatus(online, text) {
+  const el = $("status");
+  el.textContent = (online ? "● " : "● ") + text;
+  el.className = "badge " + (online ? "online" : "");
+  if (!online) el.style.color = "#fecaca";
+}
+
+function buildWeatherInputs(defaults) {
+  const grid = $("weather-grid");
+  for (const spec of WEATHER) {
+    const wrap = document.createElement("div");
+    wrap.className = "field";
+
+    const label = document.createElement("label");
+    label.textContent = spec.label + " (" + spec.unit + ")";
+    label.htmlFor = "w-" + spec.key;
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.id = "w-" + spec.key;
+    input.min = String(spec.min);
+    input.max = String(spec.max);
+    input.step = String(spec.step);
+    input.inputMode = "decimal";
+    input.value = String(Number(defaults[spec.key]).toFixed(spec.digits));
+    input.dataset.key = spec.key;
+
+    wrap.append(label, input);
+    grid.append(wrap);
+  }
+}
+
+function fillDefaults(defaults) {
+  for (const spec of WEATHER) {
+    const input = $("w-" + spec.key);
+    if (input) input.value = String(Number(defaults[spec.key]).toFixed(spec.digits));
+  }
+}
+
+function profileValue(value) {
+  if (value === null || value === undefined || value === "") return "n/a";
+  if (typeof value === "number") return fmtNumber(value, Number.isInteger(value) ? 0 : 1);
+  return String(value);
+}
+
+function renderProfile(house) {
+  const strip = $("profile-strip");
+  strip.replaceChildren();
+  const p = house.profile;
+  const chips = [
+    ["People", profileValue(p["No. of people (Temp+Perm)"])],
+    ["ACs", profileValue(p["Air Conditioners"])],
+    ["Rooms", profileValue(p["No. of rooms"])],
+    ["Owner", profileValue(p["Owner/Rented"])]
+  ];
+  for (const [label, value] of chips) {
+    const div = document.createElement("div");
+    div.className = "chip";
+    const span = document.createElement("span");
+    span.textContent = label;
+    const b = document.createElement("b");
+    b.textContent = value;
+    div.append(span, b);
+    strip.append(div);
+  }
+
+  const body = $("profile-table");
+  body.replaceChildren();
+  for (const [key, label] of PROFILE_FIELDS) {
+    const tr = document.createElement("tr");
+    const th = document.createElement("th");
+    th.textContent = label;
+    const td = document.createElement("td");
+    td.textContent = profileValue(p[key]);
+    tr.append(th, td);
+    body.append(tr);
+  }
+}
+
+function selectHouse(houseId) {
+  state.selected = state.houses.find((h) => h.house_id === houseId) || null;
+  if (!state.selected) return;
+  renderProfile(state.selected);
+  fillDefaults(state.selected.defaults);
+  hideResult();
+  showError("");
+  $("house").value = houseId;
+}
+
+function hideResult() {
+  $("result").style.display = "none";
+  $("empty").style.display = "grid";
+}
+
+function showResult(data) {
+  $("empty").style.display = "none";
+  $("result").style.display = "block";
+
+  $("result-house").textContent = data.house_id;
+  $("result-city").textContent = data.city;
+  $("result-origin").textContent = fmtTime(data.origin_time);
+  $("result-target").textContent = fmtTime(data.target_time);
+  $("result-value").textContent = Number(data.prediction_kwh).toFixed(3);
+  $("result-interval").textContent =
+    Number(data.interval_low_kwh).toFixed(2) + " – " +
+    Number(data.interval_high_kwh).toFixed(2) + " kWh";
+  $("result-last").textContent = Number(data.last_hour_kwh).toFixed(3) + " kWh";
+
+  const delta = Number(data.delta_kwh);
+  const deltaEl = $("result-delta");
+  deltaEl.textContent = (delta >= 0 ? "+" : "") + delta.toFixed(3) + " kWh";
+  deltaEl.className = delta >= 0 ? "up" : "down";
+
+  const m = state.meta || {};
+  $("model-note").innerHTML =
+    "<b>" + m.name + "</b> · held-out test MAE " +
+    (m.test_mae === null ? "n/a" : Number(m.test_mae).toFixed(3) + " kWh") +
+    " · R² " + (m.test_r2 === null ? "n/a" : Number(m.test_r2).toFixed(3)) +
+    " · 90% interval calibrated on validation residuals (" +
+    (m.interval_val_coverage === null ? "n/a" : Math.round(m.interval_val_coverage * 100) + "%") +
+    " coverage). Trained on " + fmtNumber(m.n_train_rows) + " rows (train + validation).";
+
+  drawChart(data);
+}
+
+function drawChart(data) {
+  const svg = $("chart");
+  const W = 760, H = 280;
+  const pad = { l: 48, r: 18, t: 16, b: 38 };
+  const hist = data.history || [];
+  if (!hist.length) { svg.replaceChildren(); return; }
+
+  const values = hist.map((p) => Number(p.usage_kwh));
+  const lows = [...values, Number(data.interval_low_kwh)];
+  const highs = [...values, Number(data.interval_high_kwh), Number(data.prediction_kwh)];
+  let yMax = Math.max(...highs, 0.5) * 1.12;
+  const yMin = 0;
+  const n = hist.length;
+  const xMax = n + 0.55;
+  const x = (i) => pad.l + (i / xMax) * (W - pad.l - pad.r);
+  const y = (v) => H - pad.b - ((v - yMin) / (yMax - yMin)) * (H - pad.t - pad.b);
+
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (tag, attrs) => {
+    const node = document.createElementNS(NS, tag);
+    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, String(v));
+    return node;
+  };
+
+  svg.replaceChildren();
+
+  // horizontal grid + y labels
+  const ticks = 4;
+  for (let i = 0; i <= ticks; i++) {
+    const value = (yMax / ticks) * i;
+    const yy = y(value);
+    svg.append(el("line", {
+      x1: pad.l, y1: yy, x2: W - pad.r, y2: yy,
+      stroke: "#e8eff8", "stroke-width": 1
+    }));
+    const t = el("text", {
+      x: pad.l - 8, y: yy + 4, "text-anchor": "end",
+      "font-size": 10.5, fill: "#70829b"
+    });
+    t.textContent = value.toFixed(Math.abs(value) < 10 ? 1 : 0);
+    svg.append(t);
+  }
+
+  // area + line
+  let area = "M " + x(0) + " " + y(values[0]);
+  hist.forEach((p, i) => { area += " L " + x(i) + " " + y(Number(p.usage_kwh)); });
+  area += " L " + x(n - 1) + " " + y(0) + " L " + x(0) + " " + y(0) + " Z";
+  svg.append(el("path", { d: area, fill: "rgba(14,165,233,.10)" }));
+
+  let line = "";
+  hist.forEach((p, i) => {
+    line += (i === 0 ? "M " : " L ") + x(i) + " " + y(Number(p.usage_kwh));
+  });
+  svg.append(el("path", {
+    d: line, fill: "none", stroke: "#0ea5e9", "stroke-width": 2.2,
+    "stroke-linejoin": "round", "stroke-linecap": "round"
+  }));
+
+  // origin marker
+  svg.append(el("line", {
+    x1: x(n - 1), y1: pad.t, x2: x(n - 1), y2: H - pad.b,
+    stroke: "#94a3b8", "stroke-width": 1, "stroke-dasharray": "4 4"
+  }));
+
+  // forecast interval + point
+  const fx = x(n);
+  svg.append(el("line", {
+    x1: fx, y1: y(Number(data.interval_low_kwh)),
+    x2: fx, y2: y(Number(data.interval_high_kwh)),
+    stroke: "#f59e0b", "stroke-width": 3, "stroke-linecap": "round"
+  }));
+  const cap = 7;
+  svg.append(el("line", {
+    x1: fx - cap, y1: y(Number(data.interval_low_kwh)),
+    x2: fx + cap, y2: y(Number(data.interval_low_kwh)),
+    stroke: "#f59e0b", "stroke-width": 2
+  }));
+  svg.append(el("line", {
+    x1: fx - cap, y1: y(Number(data.interval_high_kwh)),
+    x2: fx + cap, y2: y(Number(data.interval_high_kwh)),
+    stroke: "#f59e0b", "stroke-width": 2
+  }));
+  svg.append(el("circle", {
+    cx: fx, cy: y(Number(data.prediction_kwh)), r: 5.5,
+    fill: "#dc2626", stroke: "#fff", "stroke-width": 2
+  }));
+
+  // x labels
+  const label = (tx, text, anchor) => {
+    const t = el("text", {
+      x: tx, y: H - 14, "text-anchor": anchor,
+      "font-size": 10.5, fill: "#70829b"
+    });
+    t.textContent = text;
+    svg.append(t);
+  };
+  label(pad.l, fmtTime(hist[0].time), "start");
+  label(W - pad.r, "forecast " + fmtTime(data.target_time), "end");
+}
+
+async function requestPrediction() {
+  if (state.busy || !state.selected) return;
+  showError("");
+  const weather = {};
+  for (const spec of WEATHER) {
+    const input = $("w-" + spec.key);
+    const value = Number(input.value);
+    if (!Number.isFinite(value)) {
+      showError("Enter a number for " + spec.label + ".");
+      input.focus();
+      return;
+    }
+    if (input.value.trim() === "" || value < spec.min || value > spec.max) {
+      showError(spec.label + " must be between " + spec.min + " and " + spec.max + " " + spec.unit + ".");
+      input.focus();
+      return;
+    }
+    weather[spec.key] = value;
+  }
+
+  state.busy = true;
+  const button = $("predict");
+  button.disabled = true;
+  const original = button.textContent;
+  button.textContent = "Predicting…";
+
+  try {
+    const res = await fetch("/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ house_id: state.selected.house_id, weather })
+    });
+    const payload = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const detail = payload.detail;
+      if (Array.isArray(detail)) {
+        throw new Error(detail.map((d) => {
+          const field = Array.isArray(d.loc) ? d.loc.slice(1).join(".") : "input";
+          return field + ": " + d.msg;
+        }).join("; "));
+      }
+      throw new Error(detail || ("Request failed (" + res.status + ")"));
+    }
+    showResult(payload);
+    setStatus(true, "API online");
+  } catch (err) {
+    showError("Prediction failed: " + (err && err.message ? err.message : String(err)));
+  } finally {
+    state.busy = false;
+    button.disabled = false;
+    button.textContent = original;
+  }
+}
+
+function resetWeather() {
+  if (!state.selected) return;
+  fillDefaults(state.selected.defaults);
+  showError("");
+}
+
+async function boot() {
+  buildWeatherInputs({
+    temperature: 25, humidity: 60, dew: 15, precipitation: 0,
+    wind_speed: 10, wind_direction: 180, pressure: 980, solar_radiation: 0
+  });
+
+  try {
+    const res = await fetch("/houses");
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+
+    state.houses = data.houses || [];
+    state.meta = data.model || {};
+    if (!state.houses.length) throw new Error("no households in the deployment bundle");
+
+    const select = $("house");
+    for (const house of state.houses) {
+      const option = document.createElement("option");
+      option.value = house.house_id;
+      option.textContent = house.house_id + " · " + house.city;
+      select.append(option);
+    }
+    select.addEventListener("change", () => selectHouse(select.value));
+    $("predict").addEventListener("click", requestPrediction);
+    $("reset").addEventListener("click", resetWeather);
+    $("house").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") requestPrediction();
+    });
+
+    $("badge-model").textContent = state.meta.name || "model";
+    $("badge-mae").textContent = state.meta.test_mae === null || state.meta.test_mae === undefined
+      ? "—"
+      : Number(state.meta.test_mae).toFixed(3) + " kWh";
+    setStatus(true, "API online");
+    selectHouse(state.houses[0].house_id);
+  } catch (err) {
+    setStatus(false, "API unavailable");
+    showError("Could not load households: " + (err && err.message ? err.message : String(err)));
+  }
+}
+
+boot();
+</script>
+</body>
+</html>
