@@ -1,6 +1,7 @@
-Tormenta (friends project)
 
-.gitignore
+# Large local model artifact - exceeds GitHub's 100 MB per-file limit.
+# The deployed artifact is models/deployment_model.joblib (HistGradientBoosting, ~1.4 MB).
+models/best_model.joblib
 
 # Processed datasets - regenerable via src/data_prep.py
 data/processed/
