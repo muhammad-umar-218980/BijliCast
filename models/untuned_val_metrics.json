@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-11-21T16:10:57",
+  "generated_at": "2026-11-22T00:06:55",
   "selection_split": "val",
   "knn_train_rows": 40000,
   "models": {
     "Linear Regression": {
       "params": {},
       "n_train": 336053,
-      "fit_seconds": 7.194279100000131,
+      "fit_seconds": 5.213047999997798,
       "train": {
         "model": "Linear Regression",
         "split": "train",
@@ -29,7 +29,7 @@
     "KNN": {
       "params": {},
       "n_train": 40000,
-      "fit_seconds": 0.4024066000001767,
+      "fit_seconds": 0.6087880000050063,
       "train": {
         "model": "KNN",
         "split": "train",
@@ -52,7 +52,7 @@
     "Random Forest": {
       "params": {},
       "n_train": 336053,
-      "fit_seconds": 787.3564535999994,
+      "fit_seconds": 735.5559622999936,
       "train": {
         "model": "Random Forest",
         "split": "train",
@@ -75,7 +75,7 @@
     "HistGradientBoosting": {
       "params": {},
       "n_train": 336053,
-      "fit_seconds": 50.68543520000094,
+      "fit_seconds": 55.531539700001304,
       "train": {
         "model": "HistGradientBoosting",
         "split": "train",
