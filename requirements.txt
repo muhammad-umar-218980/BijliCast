@@ -22,8 +22,11 @@ ipykernel==7.4.0
 requests==2.34.2
 openpyxl==3.1.5
 
+# ---- deployment -----------------------------------------------------------
+streamlit==1.60.0
+fastapi==0.143.0
+uvicorn==0.52.0
+pydantic==2.12.3
+
 # ---- testing --------------------------------------------------------------
 pytest==9.1.1
-
-# Deployment dependencies (FastAPI, uvicorn, Streamlit) are pinned in Phase 5
-# once the applications are built and tested.
