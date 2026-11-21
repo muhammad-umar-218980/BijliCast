@@ -187,14 +187,18 @@ def self_check() -> None:
 
     train_path = SPLITS_DIR / "train.parquet"
     if train_path.exists():
-        from src.preprocessing.pipeline import build_feature_pipeline
+        from src.preprocessing.pipeline import build_feature_pipeline, get_feature_names
 
         train = pd.read_parquet(train_path)
         prep = build_feature_pipeline()
         prep.fit(train[INPUT_COLUMNS])
         X = prep.transform(row[INPUT_COLUMNS])
-        if X.shape != (1, 49) or np.isnan(X).any():
-            raise AssertionError(f"pipeline transform failed: shape={X.shape}")
+        expected_width = len(get_feature_names(prep))
+        if X.shape != (1, expected_width) or np.isnan(X).any():
+            raise AssertionError(
+                f"pipeline transform failed: shape={X.shape}, "
+                f"expected width={expected_width}"
+            )
         print(f"pipeline accepts the inference row: {X.shape}, no NaNs")
 
 

@@ -31,6 +31,7 @@ from src.utils.config import (  # noqa: E402
     FEATURES_DATASET,
     FEATURE_COLUMNS,
     HOUSE_COL,
+    INPUT_WEATHER_FEATURES,
     LAG_FEATURES,
     MERGED_DATASET,
     REQUIRED_HISTORY,
@@ -44,17 +45,6 @@ from src.utils.config import (  # noqa: E402
     WEATHER_FEATURES,
     ensure_dirs,
 )
-
-RAW_WEATHER = [
-    "temperature",
-    "humidity",
-    "dew",
-    "precipitation",
-    "wind_speed",
-    "wind_direction",
-    "pressure",
-    "solar_radiation",
-]
 
 
 def _house_features(g: pd.DataFrame) -> pd.DataFrame:
@@ -89,7 +79,7 @@ def _house_features(g: pd.DataFrame) -> pd.DataFrame:
     out[TARGET] = usage.shift(-1)
 
     # Current-hour weather (origin), never t+1.
-    for col in RAW_WEATHER:
+    for col in INPUT_WEATHER_FEATURES:
         out[col] = g[col]
 
     out["wind_dir_sin"] = np.sin(np.deg2rad(g["wind_direction"]))
@@ -187,7 +177,7 @@ def validate_features(features: pd.DataFrame, merged: pd.DataFrame) -> dict:
     for col in REQUIRED_HISTORY:
         assert features[col].notna().all(), f"{col} contains missing values"
 
-    weather_missing = int(features[list(RAW_WEATHER)].isna().sum().sum())
+    weather_missing = int(features[list(INPUT_WEATHER_FEATURES)].isna().sum().sum())
     checks["weather_missing_cells"] = weather_missing
     assert weather_missing == 0, "weather features contain missing values"
 

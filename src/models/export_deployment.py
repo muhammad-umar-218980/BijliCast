@@ -110,6 +110,12 @@ def export_deployment_artifacts(
         "hyperparameters": params,
         "n_train_rows": int(len(deploy_df)),
         "fit_data": "train + validation (test never used for fitting)",
+        "metrics_source": (
+            "Metrics come from the train-fit HGB evaluated on the validation and "
+            "test splits. The served artifact is refit on train+val, so these are "
+            "honest out-of-sample estimates for the same configuration, not a "
+            "second test evaluation of the deployed artifact."
+        ),
         "metrics": metrics,
         "prediction_interval": {
             "method": "train-fit HGB validation residual 5th/95th percentile",
@@ -129,11 +135,13 @@ def export_deployment_artifacts(
     }
 
     if persist:
+        deployment["size_mb"] = round(model_path.stat().st_size / (1024**2), 3)
         meta_path = MODELS_DIR / "model_metadata.json"
-        metadata = json.loads(meta_path.read_text())
+        metadata = json.loads(meta_path.read_text()) if meta_path.exists() else {}
         metadata["deployment_model"] = deployment
-        metadata["artifacts"]["deployment_model"] = "models/deployment_model.joblib"
-        metadata["artifacts"]["best_model_note"] = (
+        artifacts = metadata.setdefault("artifacts", {})
+        artifacts["deployment_model"] = "models/deployment_model.joblib"
+        artifacts["best_model_note"] = (
             "models/best_model.joblib is the validation-selected Random Forest, "
             "kept locally for report/metric alignment and git-ignored because "
             "it exceeds GitHub's 100 MB file limit."
@@ -145,8 +153,6 @@ def export_deployment_artifacts(
             "committed to GitHub and served by Streamlit Community Cloud. Test was "
             "evaluated once, after selection."
         )
-        meta_path.write_text(json.dumps(metadata, indent=2))
-        deployment["size_mb"] = round(model_path.stat().st_size / (1024**2), 3)
         meta_path.write_text(json.dumps(metadata, indent=2))
 
     print(f"deployment model: {DEPLOY_NAME}")

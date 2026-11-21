@@ -43,7 +43,11 @@ from src.models.train import (  # noqa: E402
     time_ordered_subsample,
 )
 from src.models.tune import best_params_from, load_tuning_results  # noqa: E402
-from src.preprocessing.pipeline import build_pipeline, get_xy  # noqa: E402
+from src.preprocessing.pipeline import (  # noqa: E402
+    build_pipeline,
+    get_feature_names,
+    get_xy,
+)
 from src.utils.config import (  # noqa: E402
     CITY_COL,
     FEATURE_COLUMNS,
@@ -200,7 +204,7 @@ def run_final_evaluation(persist: bool = True) -> dict:
     split_order = {"train": 0, "val": 1, "test": 2}
     comparison["_o"] = comparison["split"].map(split_order).fillna(3)
     comparison = (
-        comparison.sort_values(["split", "_o", "mae"])
+        comparison.sort_values(["_o", "mae"])
         .drop(columns="_o")
         .reset_index(drop=True)
     )
@@ -299,12 +303,6 @@ def _persist(payload: dict) -> None:
 
     # ---- joblib artifacts
     joblib.dump(best["pipeline"], MODELS_DIR / "best_model.joblib")
-    # Compact deployment artifact (HistGradientBoosting) + metadata update.
-    from src.models.export_deployment import export_deployment_artifacts
-
-    export_deployment_artifacts(
-        payload["train"], payload["val"], payload["tuned_params"], comparison
-    )
 
     import sklearn
 
@@ -323,7 +321,7 @@ def _persist(payload: dict) -> None:
         "prediction_interval": payload["intervals"],
         "features": FEATURE_COLUMNS,
         "input_columns": INPUT_COLUMNS,
-        "n_features_after_transform": 49,
+        "n_features_after_transform": len(get_feature_names(best["pipeline"])),
         "splits": split_summary,
         "artifacts": {
             "best_model": "models/best_model.joblib",
@@ -344,6 +342,15 @@ def _persist(payload: dict) -> None:
         },
     }
     (MODELS_DIR / "model_metadata.json").write_text(json.dumps(_jsonable(metadata), indent=2))
+
+    # Compact deployment artifact (HistGradientBoosting) + metadata update.
+    # Run AFTER the base metadata is written so the deployment block is merged
+    # into the file instead of being clobbered by the write above.
+    from src.models.export_deployment import export_deployment_artifacts
+
+    export_deployment_artifacts(
+        payload["train"], payload["val"], payload["tuned_params"], comparison
+    )
 
     print("\n=== metrics (train / val / test) ===")
     print(comparison.round(4).to_string(index=False))
