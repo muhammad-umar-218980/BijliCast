@@ -1,0 +1,99 @@
+{
+  "generated_at": "2026-11-21T16:10:57",
+  "selection_split": "val",
+  "knn_train_rows": 40000,
+  "models": {
+    "Linear Regression": {
+      "params": {},
+      "n_train": 336053,
+      "fit_seconds": 7.194279100000131,
+      "train": {
+        "model": "Linear Regression",
+        "split": "train",
+        "n": 336053,
+        "mae": 0.2164156310688267,
+        "rmse": 0.412008095823962,
+        "r2": 0.7554224942533049,
+        "median_ae": 0.08497710866240293
+      },
+      "val": {
+        "model": "Linear Regression",
+        "split": "val",
+        "n": 71995,
+        "mae": 0.3335863890847558,
+        "rmse": 0.5418894454053903,
+        "r2": 0.7343246402448633,
+        "median_ae": 0.1781540870952772
+      }
+    },
+    "KNN": {
+      "params": {},
+      "n_train": 40000,
+      "fit_seconds": 0.4024066000001767,
+      "train": {
+        "model": "KNN",
+        "split": "train",
+        "n": 40000,
+        "mae": 3.925111181335571e-08,
+        "rmse": 1.3870776858815766e-07,
+        "r2": 0.9999999999999722,
+        "median_ae": 0.0
+      },
+      "val": {
+        "model": "KNN",
+        "split": "val",
+        "n": 71995,
+        "mae": 0.409404080401022,
+        "rmse": 0.614380503685997,
+        "r2": 0.6584889626350633,
+        "median_ae": 0.2548097527319434
+      }
+    },
+    "Random Forest": {
+      "params": {},
+      "n_train": 336053,
+      "fit_seconds": 787.3564535999994,
+      "train": {
+        "model": "Random Forest",
+        "split": "train",
+        "n": 336053,
+        "mae": 0.08795788044225929,
+        "rmse": 0.17961418447490354,
+        "r2": 0.9535178429796525,
+        "median_ae": 0.0336133259015261
+      },
+      "val": {
+        "model": "Random Forest",
+        "split": "val",
+        "n": 71995,
+        "mae": 0.3306567084790774,
+        "rmse": 0.5161939938157506,
+        "r2": 0.7589229952326777,
+        "median_ae": 0.19098292444912968
+      }
+    },
+    "HistGradientBoosting": {
+      "params": {},
+      "n_train": 336053,
+      "fit_seconds": 50.68543520000094,
+      "train": {
+        "model": "HistGradientBoosting",
+        "split": "train",
+        "n": 336053,
+        "mae": 0.1960360364628636,
+        "rmse": 0.3636105452725521,
+        "r2": 0.8095074691356765,
+        "median_ae": 0.08245659271471789
+      },
+      "val": {
+        "model": "HistGradientBoosting",
+        "split": "val",
+        "n": 71995,
+        "mae": 0.32611242191743295,
+        "rmse": 0.5170064373119806,
+        "r2": 0.7581635304530772,
+        "median_ae": 0.18114336171918208
+      }
+    }
+  }
+}

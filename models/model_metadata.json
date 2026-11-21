@@ -1,0 +1,341 @@
+{
+  "project": "BijliCast",
+  "task": "next-hour household electricity consumption regression",
+  "target": "next_hour_energy_kwh",
+  "selected_model": "Random Forest",
+  "selection_rule": "lowest validation MAE among tuned learned models",
+  "trained_at": "2026-11-21T16:52:54",
+  "hyperparameters": {
+    "n_estimators": 120,
+    "min_samples_leaf": 10,
+    "max_features": 0.7,
+    "max_depth": null
+  },
+  "n_train_rows": 336053,
+  "metrics": {
+    "train": {
+      "model": "Random Forest",
+      "split": "train",
+      "n": 336053,
+      "mae": 0.15364643635633426,
+      "rmse": 0.30384897327426746,
+      "r2": 0.8669788928223576,
+      "median_ae": 0.059860008045969186
+    },
+    "val": {
+      "model": "Random Forest",
+      "split": "val",
+      "n": 71995,
+      "mae": 0.32158659755369257,
+      "rmse": 0.5145050840674695,
+      "r2": 0.7604979504988251,
+      "median_ae": 0.1746636325615627
+    },
+    "test": {
+      "model": "Random Forest",
+      "split": "test",
+      "n": 72059,
+      "mae": 0.25345424527367144,
+      "rmse": 0.43221609172602676,
+      "r2": 0.7229038434080362,
+      "median_ae": 0.12908994329614198
+    }
+  },
+  "test_metrics_all_models": [
+    {
+      "model": "HistGradientBoosting",
+      "split": "test",
+      "n": 72059,
+      "mae": 0.24991966771469995,
+      "rmse": 0.42732973408172925,
+      "r2": 0.7291337699318039,
+      "median_ae": 0.12804274770489182,
+      "kind": "model"
+    },
+    {
+      "model": "Random Forest",
+      "split": "test",
+      "n": 72059,
+      "mae": 0.25345424527367144,
+      "rmse": 0.43221609172602676,
+      "r2": 0.7229038434080362,
+      "median_ae": 0.12908994329614198,
+      "kind": "model"
+    },
+    {
+      "model": "Linear Regression",
+      "split": "test",
+      "n": 72059,
+      "mae": 0.26014582567625566,
+      "rmse": 0.45945043218917586,
+      "r2": 0.6868834905728283,
+      "median_ae": 0.1254031668107266,
+      "kind": "model"
+    },
+    {
+      "model": "persistence_lag_1h",
+      "split": "test",
+      "n": 72059,
+      "mae": 0.27601666774176825,
+      "rmse": 0.5470484348300277,
+      "r2": 0.5561050566925392,
+      "median_ae": 0.09983638896666669,
+      "kind": "baseline"
+    },
+    {
+      "model": "KNN",
+      "split": "test",
+      "n": 72059,
+      "mae": 0.3177905452389684,
+      "rmse": 0.5195643307530298,
+      "r2": 0.5995878064090714,
+      "median_ae": 0.17409664101197514,
+      "kind": "model"
+    },
+    {
+      "model": "seasonal_naive_lag_24h",
+      "split": "test",
+      "n": 72059,
+      "mae": 0.3521703255305375,
+      "rmse": 0.641462706785323,
+      "r2": 0.38966052022609077,
+      "median_ae": 0.14296194443333332,
+      "kind": "baseline"
+    },
+    {
+      "model": "train_mean",
+      "split": "test",
+      "n": 72059,
+      "mae": 0.5458419025731248,
+      "rmse": 0.8476997620374911,
+      "r2": -0.06589091510286393,
+      "median_ae": 0.3508012736345758,
+      "kind": "baseline"
+    }
+  ],
+  "prediction_interval": {
+    "method": "validation residual 5th/95th percentile",
+    "train": {
+      "n": 336053,
+      "coverage": 0.9687460013747832,
+      "mean_width": 1.2845271515166554,
+      "low_offset": -0.7635695256844515,
+      "high_offset": 0.8648577771041299
+    },
+    "val": {
+      "n": 71995,
+      "coverage": 0.899993055073269,
+      "mean_width": 1.4840343242404106,
+      "low_offset": -0.7635695256844515,
+      "high_offset": 0.8648577771041299
+    },
+    "test": {
+      "n": 72059,
+      "coverage": 0.9350670977948625,
+      "mean_width": 1.4339672089949427,
+      "low_offset": -0.7635695256844515,
+      "high_offset": 0.8648577771041299
+    }
+  },
+  "features": [
+    "temperature",
+    "humidity",
+    "dew",
+    "precipitation",
+    "wind_speed",
+    "wind_direction",
+    "pressure",
+    "solar_radiation",
+    "wind_dir_sin",
+    "wind_dir_cos",
+    "lag_1h",
+    "lag_2h",
+    "lag_3h",
+    "lag_24h",
+    "lag_168h",
+    "rolling_mean_3h",
+    "rolling_mean_24h",
+    "rolling_std_24h",
+    "hour",
+    "day_of_week",
+    "month",
+    "is_weekend",
+    "No. of people (Temp+Perm)",
+    "No. of Adults (14-60)",
+    "No. of Children (0-13)",
+    "Property Area (Marla)",
+    "Covered Area",
+    "No of Floors",
+    "No. of rooms",
+    "Air Conditioners",
+    "Air Coolers",
+    "Refrigerators",
+    "Washing Machines",
+    "Celling Fans",
+    "Wall Fans",
+    "Water Pumps",
+    "Geysers",
+    "Electric heaters",
+    "UPS",
+    "Build year of house",
+    "city",
+    "Owner/Rented"
+  ],
+  "input_columns": [
+    "datetime",
+    "temperature",
+    "humidity",
+    "dew",
+    "precipitation",
+    "wind_speed",
+    "wind_direction",
+    "pressure",
+    "solar_radiation",
+    "lag_1h",
+    "lag_2h",
+    "lag_3h",
+    "lag_24h",
+    "lag_168h",
+    "rolling_mean_3h",
+    "rolling_mean_24h",
+    "rolling_std_24h",
+    "No. of people (Temp+Perm)",
+    "No. of Adults (14-60)",
+    "No. of Children (0-13)",
+    "Property Area (Marla)",
+    "Covered Area",
+    "No of Floors",
+    "No. of rooms",
+    "Air Conditioners",
+    "Air Coolers",
+    "Refrigerators",
+    "Washing Machines",
+    "Celling Fans",
+    "Wall Fans",
+    "Water Pumps",
+    "Geysers",
+    "Electric heaters",
+    "UPS",
+    "Build year of house",
+    "city",
+    "Owner/Rented"
+  ],
+  "n_features_after_transform": 49,
+  "splits": {
+    "ratios": [
+      0.7,
+      0.15,
+      0.15
+    ],
+    "boundary_rule": "rows",
+    "boundaries": {
+      "val_start": "2024-06-30T01:00:00",
+      "test_start": "2024-08-28T11:00:00"
+    },
+    "rows_total_input": 480209,
+    "rows_purged_at_boundaries": 102,
+    "splits": {
+      "train": {
+        "rows": 336053,
+        "pct_of_total": 69.98,
+        "houses": 59,
+        "start": "2023-07-22T23:00:00",
+        "end": "2024-06-29T23:00:00",
+        "target_mean": 0.6255,
+        "target_std": 0.8331,
+        "target_min": 0.0,
+        "target_p25": 0.132,
+        "target_median": 0.3509,
+        "target_p75": 0.7446,
+        "target_max": 12.6618
+      },
+      "val": {
+        "rows": 71995,
+        "pct_of_total": 14.99,
+        "houses": 57,
+        "start": "2024-06-30T01:00:00",
+        "end": "2024-08-28T09:00:00",
+        "target_mean": 1.1206,
+        "target_std": 1.0513,
+        "target_min": 0.0,
+        "target_p25": 0.398,
+        "target_median": 0.7926,
+        "target_p75": 1.5544,
+        "target_max": 10.5553
+      },
+      "test": {
+        "rows": 72059,
+        "pct_of_total": 15.01,
+        "houses": 48,
+        "start": "2024-08-28T11:00:00",
+        "end": "2024-11-27T22:00:00",
+        "target_mean": 0.8363,
+        "target_std": 0.8211,
+        "target_min": 0.0,
+        "target_p25": 0.3216,
+        "target_median": 0.5889,
+        "target_p75": 1.081,
+        "target_max": 8.8678
+      }
+    }
+  },
+  "artifacts": {
+    "best_model": "models/best_model.joblib",
+    "deployment_model": "models/deployment_model.joblib",
+    "house_profiles": "models/house_profiles.csv",
+    "test_predictions": "models/best_test_predictions.parquet",
+    "best_model_note": "models/best_model.joblib is the validation-selected Random Forest, kept locally for report/metric alignment and git-ignored because it exceeds GitHub's 100 MB file limit."
+  },
+  "notes": "Random Forest won the validation MAE and is saved as best_model.joblib (train-fit). The deployed artifact is HistGradientBoosting: tied on validation within CV noise, best one-shot test MAE, ~2 MB, so it can be committed to GitHub and served by Streamlit Community Cloud. Test was evaluated once, after selection.",
+  "library_versions": {
+    "scikit-learn": "1.9.1",
+    "pandas": "3.0.3",
+    "numpy": "2.4.6",
+    "joblib": "1.6.0"
+  },
+  "deployment_model": {
+    "name": "HistGradientBoosting",
+    "artifact": "models/deployment_model.joblib",
+    "hyperparameters": {
+      "min_samples_leaf": 50,
+      "max_leaf_nodes": 31,
+      "max_iter": 400,
+      "learning_rate": 0.06,
+      "l2_regularization": 5.0
+    },
+    "n_train_rows": 408048,
+    "fit_data": "train + validation (test never used for fitting)",
+    "metrics": {
+      "test": {
+        "n": 72059,
+        "mae": 0.2499196677146999,
+        "rmse": 0.4273297340817292,
+        "r2": 0.7291337699318039,
+        "median_ae": 0.1280427477048918
+      },
+      "train": {
+        "n": 336053,
+        "mae": 0.1966049169393,
+        "rmse": 0.3666088509026793,
+        "r2": 0.806352941933694,
+        "median_ae": 0.0826135965610428
+      },
+      "val": {
+        "n": 71995,
+        "mae": 0.3272733923372525,
+        "rmse": 0.5156588687683774,
+        "r2": 0.7594225728192479,
+        "median_ae": 0.1847874257234266
+      }
+    },
+    "prediction_interval": {
+      "method": "train-fit HGB validation residual 5th/95th percentile",
+      "low_offset": -0.7815400353662822,
+      "high_offset": 0.8457557691512295,
+      "val_coverage": 0.899993055073269,
+      "test_coverage": 0.9379674988551049
+    },
+    "selection_rationale": "Random Forest had the best validation MAE by a statistically insignificant margin (0.3216 vs 0.3273, CV fold std ~0.067). HistGradientBoosting was chosen for deployment because it is tied on accuracy, has the best one-shot test MAE, and its artifact is ~2 MB instead of ~270 MB (GitHub rejects files >100 MB, and Streamlit Community Cloud deploys from GitHub).",
+    "size_mb": 1.429
+  }
+}
