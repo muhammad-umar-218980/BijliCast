@@ -181,7 +181,7 @@ row exactly and transforms it to 49 columns with no NaNs).
 |---|---|---|
 | Streamlit Community Cloud | house selector (auto-fills profile), city, weather sliders, origin hour | next-hour kWh + prediction interval + one explanatory chart |
 | Hugging Face Spaces | model card + pipeline + live Gradio/Streamlit Space | same prediction |
-| FastAPI + HTML | `POST /predict` JSON validated with Pydantic | `{prediction_kwh, interval, model, warnings}` + clear errors |
+| FastAPI + HTML | `POST /predict` JSON validated with Pydantic | `{house_id, city, origin_time, target_time, prediction_kwh, interval_low_kwh, interval_high_kwh, last_hour_kwh, delta_kwh, history}` + clear errors |
 
 All three load the same joblib pipeline and the same inference helper.
 

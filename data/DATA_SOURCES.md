@@ -14,7 +14,7 @@ as required by CT-378 Machine Learning Guidelines.
 | **Collection method** | Downloaded CSV archive from LEI website; electricity data from smart-meter readings (1-minute granularity), weather data from on-site sensors |
 | **Licence / Terms** | LUMS REWD-P is described as open-source; however, precise licence terms must be verified at <https://lei.lums.edu.pk/datasets/residential-energy-and-weather-data-pakistan.html>. Redistribution of original measurements may be restricted; this project uses the data for academic ML research only. |
 | **Geographic coverage** | Six Pakistani cities: Karachi, Lahore, Multan, Peshawar, Islamabad, Skardu |
-| **Number of households** | 59 unique households (60 CSVs; Peshawar has 10 duplicate file pairs) |
+| **Number of households** | 59 unique households (59 CSVs) |
 | **Electricity data date range** | 2023-11-01 → 2024-10-31 (most houses); some houses extend to 2024-11-19 (Karachi House10) or 2024-11-28 (Skardu House51) |
 | **Electricity measurement** | Whole-home power in kW, recorded at 1-minute interval; aggregated to hourly mean kWh for analysis |
 | **Weather variables (6 CSVs)** | Temperature (°C), Humidity (%), Dew Point (°C), Precipitation (mm), Wind Speed (km/h), Wind Direction (°), Pressure (hPa), Solar Radiation (W/m²), Solar Energy (kWh/m²), UV Index |

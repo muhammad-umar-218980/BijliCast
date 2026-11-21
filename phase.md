@@ -58,7 +58,7 @@ Legend: ✅ done · 🔄 in progress · ⏳ pending
 - [x] Weather EDA — distributions, correlations, autocorrelation (`03`)
 - [x] Data integration (`04`)
 - [x] Integrated EDA — weather/usage, ACs vs usage, weekday/weekend (`05`)
-- [x] **25 figures** in `reports/figures/` (requirement: ≥5)
+- [x] **42 figures** in `reports/figures/` (requirement: ≥5)
 - [x] Target-bin balance plot (regression analogue of class balance)
 
 ## Phase 3 — Preprocessing & feature engineering ✅
@@ -156,7 +156,7 @@ Legend: ✅ done · 🔄 in progress · ⏳ pending
 
 | # | Guideline step | Status | Evidence |
 |---|---|---|---|
-| 1 | EDA incl. ≥5 plots | ✅ | notebooks 01–05, 25 figures |
+| 1 | EDA incl. ≥5 plots | ✅ | notebooks 01–05, 42 figures |
 | 2 | Preprocessing in Pipeline, train-only | ✅ | `src/preprocessing/pipeline.py`, notebook 07 |
 | 3 | Train/val/test 70/15/15, time-ordered | ✅ | `src/preprocessing/split.py`, `split_summary.json` |
 | 4 | Baseline + ≥3 algorithms | ✅ | Phase 5, notebooks 08–09 |
