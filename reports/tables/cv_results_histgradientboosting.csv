@@ -1,6 +1,6 @@
 rank_test_score,mean_train_mae,mean_test_mae,std_test_mae,mean_fit_time,params
-1,0.1725,0.218,0.0667,11.43,"{'model__min_samples_leaf': 50, 'model__max_leaf_nodes': 31, 'model__max_iter': 400, 'model__learning_rate': 0.06, 'model__l2_regularization': 5.0}"
-2,0.1751,0.2187,0.0662,20.27,"{'model__min_samples_leaf': 50, 'model__max_leaf_nodes': 31, 'model__max_iter': 400, 'model__learning_rate': 0.03, 'model__l2_regularization': 0.0}"
-3,0.1703,0.2201,0.0678,18.46,"{'model__min_samples_leaf': 50, 'model__max_leaf_nodes': 31, 'model__max_iter': 400, 'model__learning_rate': 0.15, 'model__l2_regularization': 5.0}"
-3,0.1703,0.2201,0.0678,18.38,"{'model__min_samples_leaf': 50, 'model__max_leaf_nodes': 31, 'model__max_iter': 200, 'model__learning_rate': 0.15, 'model__l2_regularization': 5.0}"
-5,0.1809,0.2205,0.0691,8.46,"{'model__min_samples_leaf': 20, 'model__max_leaf_nodes': 15, 'model__max_iter': 400, 'model__learning_rate': 0.15, 'model__l2_regularization': 1.0}"
+1,0.1725,0.218,0.0667,16.06,"{'model__min_samples_leaf': 50, 'model__max_leaf_nodes': 31, 'model__max_iter': 400, 'model__learning_rate': 0.06, 'model__l2_regularization': 5.0}"
+2,0.1751,0.2187,0.0662,31.36,"{'model__min_samples_leaf': 50, 'model__max_leaf_nodes': 31, 'model__max_iter': 400, 'model__learning_rate': 0.03, 'model__l2_regularization': 0.0}"
+3,0.1703,0.2201,0.0678,11.71,"{'model__min_samples_leaf': 50, 'model__max_leaf_nodes': 31, 'model__max_iter': 400, 'model__learning_rate': 0.15, 'model__l2_regularization': 5.0}"
+3,0.1703,0.2201,0.0678,15.74,"{'model__min_samples_leaf': 50, 'model__max_leaf_nodes': 31, 'model__max_iter': 200, 'model__learning_rate': 0.15, 'model__l2_regularization': 5.0}"
+5,0.1809,0.2205,0.0691,12.9,"{'model__min_samples_leaf': 20, 'model__max_leaf_nodes': 15, 'model__max_iter': 400, 'model__learning_rate': 0.15, 'model__l2_regularization': 1.0}"
