@@ -2,12 +2,12 @@
 title: BijliCast
 emoji: ⚡
 colorFrom: blue
-colorTo: teal
-sdk: streamlit
+colorTo: green
+sdk: gradio
 sdk_version: 1.60.0
 app_file: app.py
 pinned: false
-python_version: "3.13"
+python_version: "3.12.12"
 short_description: Next-hour household electricity forecasting for Pakistan
 ---
 
