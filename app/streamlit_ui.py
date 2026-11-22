@@ -10,9 +10,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import matplotlib
-matplotlib.use("Agg")  # Force non-interactive backend for Streamlit Cloud
-import matplotlib.pyplot as plt
+import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -305,61 +303,80 @@ def run(root: str | Path | None = None) -> None:
 
         history = history.set_index(TIME_COL)["usage_kwh"]
 
-        fig, ax = plt.subplots(figsize=(8, 3))
-
-        ax.plot(
-            history.index,
-            history.to_numpy(),
-            color="#1f77b4",
-            lw=1.5,
-            label="actual usage",
-        )
-
-        ax.axvline(
-            origin,
-            color="grey",
-            ls="--",
-            lw=1,
-            label="origin (last reading)",
+        # Rendered client-side with Vega-Lite: no PNG is streamed from the
+        # server's /media route, which is where Community Cloud was failing.
+        history_plot = pd.DataFrame(
+            {
+                "time": history.index,
+                "usage_kwh": history.to_numpy(),
+                "series": "actual usage",
+            }
         )
 
         target = pd.Timestamp(result["target_time"])
 
-        ax.errorbar(
-            [target],
-            [result["prediction_kwh"]],
-            yerr=[
-                [
-                    result["prediction_kwh"]
-                    - result["interval_low_kwh"]
-                ],
-                [
-                    result["interval_high_kwh"]
-                    - result["prediction_kwh"]
-                ],
-            ],
-            fmt="o",
-            color="#d62728",
-            capsize=5,
-            label="forecast (90% interval)",
+        forecast_plot = pd.DataFrame(
+            {
+                "time": [target],
+                "usage_kwh": [result["prediction_kwh"]],
+                "low": [result["interval_low_kwh"]],
+                "high": [result["interval_high_kwh"]],
+                "series": "forecast (90% interval)",
+            }
         )
 
-        ax.set_ylabel("kWh")
-        ax.set_xlabel("datetime")
-        ax.legend(loc="upper left", fontsize=8)
-        ax.grid(alpha=0.3)
+        series_color = alt.Color(
+            "series:N",
+            title=None,
+            scale=alt.Scale(
+                domain=["actual usage", "forecast (90% interval)"],
+                range=["#1f77b4", "#d62728"],
+            ),
+        )
 
-        fig.autofmt_xdate()
-
-        try:
-            st.pyplot(fig)
-        except Exception:
-            st.info(
-                "Chart temporarily unavailable - "
-                "prediction and interval are correct"
+        chart = (
+            alt.Chart(history_plot)
+            .mark_line(strokeWidth=1.5)
+            .encode(
+                x=alt.X("time:T", title="datetime"),
+                y=alt.Y("usage_kwh:Q", title="kWh"),
+                color=series_color,
+                tooltip=[
+                    alt.Tooltip("time:T", title="time"),
+                    alt.Tooltip("usage_kwh:Q", title="kWh", format=".3f"),
+                ],
             )
-        finally:
-            plt.close(fig)
+            + alt.Chart(forecast_plot)
+            .mark_rule(strokeWidth=2)
+            .encode(
+                x=alt.X("time:T"),
+                y=alt.Y("low:Q", title="kWh"),
+                y2=alt.Y2("high:Q"),
+                color=series_color,
+                tooltip=[
+                    alt.Tooltip("low:Q", title="interval low", format=".3f"),
+                    alt.Tooltip("high:Q", title="interval high", format=".3f"),
+                ],
+            )
+            + alt.Chart(forecast_plot)
+            .mark_point(filled=True, size=70)
+            .encode(
+                x=alt.X("time:T"),
+                y=alt.Y("usage_kwh:Q", title="kWh"),
+                color=series_color,
+                tooltip=[
+                    alt.Tooltip("time:T", title="time"),
+                    alt.Tooltip(
+                        "usage_kwh:Q", title="forecast", format=".3f"
+                    ),
+                ],
+            )
+            + alt.Chart(pd.DataFrame({"time": [origin]}))
+            .mark_rule(color="grey", strokeDash=[4, 4])
+            .encode(x=alt.X("time:T"))
+        )
+
+        st.altair_chart(chart, width="stretch")
 
         # ---------------------------------------------------------
         # Model information
