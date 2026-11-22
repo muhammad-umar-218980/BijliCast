@@ -115,11 +115,61 @@ same `app/service.py` contract, so the three deployments cannot drift apart.
 
 ## Deployments
 
+BijliCast implements all three CT-378 deployment platforms. Each loads the
+same `models/deployment_model.joblib` (HistGradientBoosting, ~1.4 MB) and
+shared inference service (`app/service.py`), ensuring consistent predictions
+across all interfaces.
+
 | Target | Entry point | Status |
 |---|---|---|
-| Streamlit Community Cloud | `app/streamlit_app.py` | ready to deploy from GitHub |
-| Hugging Face Spaces | `deploy/huggingface/app.py` | bundle generated, self-checked |
-| FastAPI + HTML | `app/api.py` | verified locally (`/`, `/docs`, `/predict`) |
+| **Streamlit Community Cloud** | `app/streamlit_app.py` | ✅ Live: `bijlicast.streamlit.app` |
+| **Hugging Face Spaces** | `deploy/huggingface/app.py` | ✅ Live: `https://huggingface.co/spaces/muhammadumar15/BijliCast` |
+| **FastAPI + HTML** | `app/api.py` | ✅ Local: `http://127.0.0.1:8000` |
+
+### 1. Streamlit Community Cloud
+
+- **Public URL**: `bijlicast.streamlit.app`
+- Entry point: `app/streamlit_app.py`
+- Includes: house selector, weather input sliders, **next-hour kWh prediction**,
+  90% prediction interval, and one explanatory chart of last 72 hours of usage.
+- Deploy: Push to GitHub → <https://share.streamlit.io> → New app → set main file
+  to `app/streamlit_app.py`. No secrets or API keys required.
+- The app, FastAPI backend, and Hugging Face Space all share the same `app/service.py`
+  contract, so they cannot drift apart.
+
+### 2. Hugging Face Spaces
+
+- **Public URL**: `https://huggingface.co/spaces/muhammadumar15/BijliCast`
+- **Model card**: `https://huggingface.co/muhammadumar15/BijliCast`
+- Bundle generated via `python -m src.deploy.export_hf_space` (output: `deploy/huggingface/`,
+  ~1.6 MB, includes `.streamlit/config.toml`).
+- SDK: **Streamlit**, Hardware: **CPU basic (free)**, Visibility: **Public**.
+- Upload `deploy/huggingface/` contents (include hidden `.streamlit/` directory) to the
+  Space. The Space installs `requirements.txt` and opens the same Streamlit UI.
+- Self-check runs a real prediction inside the folder as verification.
+
+### 3. FastAPI + HTML front end
+
+- **Local URL**: `http://127.0.0.1:8000`
+- **Interactive docs**: `http://127.0.0.1:8000/docs` (Swagger UI)
+- **Liveness health**: `http://127.0.0.1:8000/health`
+- Run: `uvicorn app.api:app --host 127.0.0.1 --port 8000`
+- **Endpoints**:
+  - `GET /` — static HTML frontend
+  - `GET /health` — model status + house count
+  - `GET /houses` — list 59 households with weather defaults and model metrics
+  - `POST /predict` — next-hour kWh with 90% interval (Pydantic-validated input)
+  - `GET /docs` — interactive API documentation
+- **Input validation**: Pydantic models enforce weather ranges (e.g. temperature ∈ [-60, 60],
+  humidity ∈ [0, 100], etc.). Unknown households return **404**. Invalid inputs return
+  **422** (unprocessable entity) with clear error details.
+- **Response** includes: `prediction_kwh`, `interval_low_kwh`, `interval_high_kwh`,
+  `last_hour_kwh`, `delta_kwh`, and last 72 hourly values for charting.
+- This is the only deployment that runs on localhost during the demo; the other two
+  are cloud-hosted with public URLs.
+
+All three deployments load the same `models/deployment_model.joblib` and shared
+`app/service.py` contract, ensuring identical prediction behavior across platforms.
 
 ### 1. Streamlit Community Cloud
 
@@ -269,3 +319,8 @@ report.
   random candidates per model. `TimeSeriesSplit(gap=120)` is expressed in rows,
   not hours. These are documented compute guards, not an exhaustive search.
 - Predictions are for research/demo purposes, not billing or grid operations.
+
+**HF Model Card**: `https://huggingface.co/muhammadumar15/BijliCast`
+**HF Space**: `https://huggingface.co/spaces/muhammadumar15/BijliCast`
+
+Made by Muhammad Umar 💖
