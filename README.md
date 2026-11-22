@@ -34,7 +34,7 @@ is used, so the model never depends on a perfect weather forecast.
   (CV fold std ≈ 0.067). **HistGradientBoosting is the deployed model** because
   its artifact is ~1.4 MB instead of ~270 MB (GitHub rejects files >100 MB and
   Streamlit Community Cloud deploys from GitHub).
-- 90% prediction interval from validation residual quantiles; test coverage 93.8%.
+- 90% prediction interval from validation residual quantiles; test coverage 93.8% (deployed HGB; RF 93.5%).
 
 ## Data
 
@@ -142,10 +142,10 @@ across all interfaces.
 - **Public URL**: `https://huggingface.co/spaces/muhammadumar15/BijliCast`
 - **Model card**: `https://huggingface.co/muhammadumar15/BijliCast`
 - Bundle generated via `python -m src.deploy.export_hf_space` (output: `deploy/huggingface/`,
-  ~1.6 MB, includes `.streamlit/config.toml`).
-- SDK: **Streamlit**, Hardware: **CPU basic (free)**, Visibility: **Public**.
-- Upload `deploy/huggingface/` contents (include hidden `.streamlit/` directory) to the
-  Space. The Space installs `requirements.txt` and opens the same Streamlit UI.
+  ~1.6 MB, Gradio entry point `app.py`).
+- SDK: **Gradio**, Hardware: **CPU basic (free)**, Visibility: **Public**.
+- Upload `deploy/huggingface/` contents to the Space. The Space installs
+  `requirements.txt` and opens the Gradio UI.
 - Self-check runs a real prediction inside the folder as verification.
 
 ### 3. FastAPI + HTML front end
@@ -215,18 +215,19 @@ The Space is a separate repository, so a self-contained bundle is generated:
 python -m src.deploy.export_hf_space
 ```
 
-It copies the UI, service, deployment artifacts, the minimal `src/` modules
-needed to unpickle the pipeline, a pinned `requirements.txt`, and the HF model
-card. The output is `deploy/huggingface/` (~1.6 MB) and the script runs a real
-prediction inside that folder as a self-check.
+It copies the shared service, deployment artifacts, and the minimal `src/`
+modules needed to unpickle the pipeline; the Gradio entry point, model card,
+and pinned `requirements.txt` are kept in the bundle. The output is
+`deploy/huggingface/` (~1.6 MB), and the script runs a real prediction inside
+that folder as a self-check.
 
 Steps:
 
 1. Create a **New Space** at <https://huggingface.co/new-space> with SDK
-   **Streamlit**, hardware **CPU basic (free)** and visibility **Public**.
+   **Gradio**, hardware **CPU basic (free)** and visibility **Public**.
 2. Publish the contents of `deploy/huggingface/` to the Space, either:
    - **Web UI:** *Files → Add file → Upload files/folders* and upload the
-     folder contents (include the hidden `.streamlit/` directory), or
+     folder contents, or
    - **git:**
      ```bash
      git clone https://huggingface.co/spaces/<user>/BijliCast hf-space
@@ -236,11 +237,11 @@ Steps:
      git commit -m "Deploy BijliCast"
      git push
      ```
-3. Wait for the build; the Space installs `requirements.txt` and opens the same
-   Streamlit UI. The `README.md` front matter (`sdk: streamlit`,
+3. Wait for the build; the Space installs `requirements.txt` and opens the
+   Gradio UI. The `README.md` front matter (`sdk: gradio`,
    `app_file: app.py`) is already set.
 
-If you change the UI, service, model or theme, re-run
+If you change the shared service or model, re-run
 `python -m src.deploy.export_hf_space` before pushing the Space again.
 
 ### 3. FastAPI + HTML front end
