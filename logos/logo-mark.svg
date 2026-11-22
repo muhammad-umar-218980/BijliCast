@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="528" viewBox="53 105 820 528"><title>BijliCast BC energy-pulse monogram</title>
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M250 165 V575 M250 165 H445
+               C555 165 590 215 590 285
+               C590 350 548 385 445 385 H250
+               M445 385 C555 385 590 430 590 500
+               C590 565 548 575 445 575 H250"
+            stroke="#13213F" stroke-width="68"/>
+      <path d="M812 180 C735 162 596 232 596 370 C596 508 735 578 812 560" stroke="#6B8FB3" stroke-width="74"/>
+      <path d="M95 370 H310 L365 270 L425 470 L485 370 H550"
+            stroke="#C2643F" stroke-width="34"/>
+    </g></svg>
