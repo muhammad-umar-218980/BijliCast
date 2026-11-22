@@ -1,3 +1,4 @@
+
 """Streamlit UI for BijliCast (shared by local/Community Cloud and HF Spaces).
 
 The wrapper (:mod:`app.streamlit_app`) passes the repository root; this module
@@ -9,7 +10,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import matplotlib.pyplot as plt
+import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -72,21 +73,27 @@ PROFILE_TABLE_COLUMNS = [
 def _fmt(value, spec: str = "%.0f") -> str:
     if value is None:
         return "n/a"
+
     try:
         number = float(value)
     except (TypeError, ValueError):
         return str(value)
+
     if not np.isfinite(number):
         return "n/a"
+
     return spec % number
 
 
 def _static_dict(profile: pd.Series) -> dict:
     static = {}
+
     for col in STATIC_NUMERIC_FEATURES:
         static[col] = profile[col]
+
     for col in STATIC_CATEGORICAL_FEATURES:
         static[col] = profile[col]
+
     return static
 
 
@@ -118,48 +125,82 @@ def run(root: str | Path | None = None) -> None:
         "LUMS REWD-P households + Open-Meteo ERA5 weather"
     )
 
-    # ------------------------------------------------------------- sidebar
+    # -------------------------------------------------------------
+    # Sidebar
+    # -------------------------------------------------------------
     with st.sidebar:
         st.header("Household")
-        labels = {f"{h['house_id']} · {h['city']}": h["house_id"] for h in houses}
-        choice = st.selectbox("Select a household", list(labels), index=0)
+
+        labels = {
+            f"{h['house_id']} · {h['city']}": h["house_id"]
+            for h in houses
+        }
+
+        choice = st.selectbox(
+            "Select a household",
+            list(labels),
+            index=0,
+        )
+
         house = labels[choice]
         context = by_house[house]
         city = context["city"]
 
         st.divider()
         st.subheader("Model")
+
         st.write(f"**{model_info['name']}**")
+
         if model_info["test_mae"] is not None:
-            st.write(f"Held-out test MAE: **{model_info['test_mae']:.3f} kWh**")
+            st.write(
+                f"Held-out test MAE: **{model_info['test_mae']:.3f} kWh**"
+            )
+
         if model_info["test_r2"] is not None:
             st.write(f"Test R²: **{model_info['test_r2']:.3f}**")
+
         coverage = model_info["interval_val_coverage"]
+
         coverage_text = (
-            f"{coverage:.0%} coverage" if coverage is not None else "coverage unavailable"
+            f"{coverage:.0%} coverage"
+            if coverage is not None
+            else "coverage unavailable"
         )
+
         st.caption(
             f"Trained on {model_info['n_train_rows']:,} rows. "
             f"Prediction interval from validation residuals ({coverage_text})."
         )
+
         st.divider()
+
         st.caption(
             "Uses only current-hour weather and the last 168 h of usage. "
             "No next-hour weather is used, so the forecast does not depend on "
             "a perfect weather forecast."
         )
 
-    # ------------------------------------------------------------- profile
-    profile = service.profiles[service.profiles[HOUSE_COL] == house].iloc[0]
+    # -------------------------------------------------------------
+    # Household profile
+    # -------------------------------------------------------------
+    profile = service.profiles[
+        service.profiles[HOUSE_COL] == house
+    ].iloc[0]
 
     c1, c2, c3, c4 = st.columns(4)
+
     c1.metric("City", city)
+
     for col, (source, label, spec) in zip(
-        (c2, c3, c4), PROFILE_METRICS
+        (c2, c3, c4),
+        PROFILE_METRICS,
     ):
         col.metric(label, _fmt(profile[source], spec))
 
-    with st.expander("Household profile used by the model", expanded=False):
+    with st.expander(
+        "Household profile used by the model",
+        expanded=False,
+    ):
         table = pd.DataFrame(
             {
                 house: [
@@ -169,11 +210,16 @@ def run(root: str | Path | None = None) -> None:
             },
             index=PROFILE_TABLE_COLUMNS,
         ).astype(str)
+
         st.dataframe(table, width="stretch")
 
-    # ------------------------------------------------------------- inputs
+    # -------------------------------------------------------------
+    # Weather inputs
+    # -------------------------------------------------------------
     origin = pd.Timestamp(context["origin_time"])
+
     st.subheader("Current-hour conditions")
+
     st.caption(
         f"Origin reading: **{origin:%Y-%m-%d %H:%M}** · "
         f"forecast target: **{origin + pd.Timedelta(hours=1):%Y-%m-%d %H:%M}**. "
@@ -183,12 +229,17 @@ def run(root: str | Path | None = None) -> None:
 
     defaults = context["defaults"]
     weather_inputs: dict[str, float] = {}
+
     keys = list(INPUT_WEATHER_FEATURES)
+
     for row_start in range(0, len(keys), 4):
         cols = st.columns(4)
-        for col, key in zip(cols, keys[row_start : row_start + 4]):
+
+        for col, key in zip(cols, keys[row_start:row_start + 4]):
             label, lo, hi, step, fmt = WEATHER_SPECS[key]
+
             default = min(max(defaults[key], lo), hi)
+
             weather_inputs[key] = col.number_input(
                 label,
                 min_value=lo,
@@ -199,82 +250,170 @@ def run(root: str | Path | None = None) -> None:
                 key=f"w_{key}",
             )
 
+    # -------------------------------------------------------------
+    # Prediction
+    # -------------------------------------------------------------
     predict = st.button(
-        "⚡ Predict next hour", type="primary", width="stretch"
+        "⚡ Predict next hour",
+        type="primary",
+        width="stretch",
     )
 
     if predict:
         try:
             result = service.predict(house, weather_inputs)
             st.session_state["result"] = result.to_dict()
+
         except Exception as exc:  # noqa: BLE001 - shown to the user
             st.error(f"Prediction failed: {exc}")
             st.stop()
 
     result = st.session_state.get("result")
+
     if result and result["house_id"] == house:
+
+        # ---------------------------------------------------------
+        # Prediction metrics
+        # ---------------------------------------------------------
         r1, r2, r3 = st.columns(3)
+
         r1.metric(
-            "Predicted next-hour energy", f"{result['prediction_kwh']:.3f} kWh"
+            "Predicted next-hour energy",
+            f"{result['prediction_kwh']:.3f} kWh",
         )
+
         r2.metric(
             "90% prediction interval",
             f"{result['interval_low_kwh']:.2f} – "
             f"{result['interval_high_kwh']:.2f} kWh",
         )
-        r3.metric("Change vs last hour", f"{result['delta_kwh']:+.3f} kWh")
 
+        r3.metric(
+            "Change vs last hour",
+            f"{result['delta_kwh']:+.3f} kWh",
+        )
+
+        # ---------------------------------------------------------
+        # Historical usage + forecast chart
+        # ---------------------------------------------------------
         st.subheader("Last 72 hours and the forecast")
+
         history = pd.DataFrame(result["history"])
         history[TIME_COL] = pd.to_datetime(history["time"])
+
         history = history.set_index(TIME_COL)["usage_kwh"]
 
-        fig, ax = plt.subplots(figsize=(11, 3.4))
-        ax.plot(
-            history.index, history.to_numpy(), color="#1f77b4", lw=1.5,
-            label="actual usage",
+        # Rendered client-side with Vega-Lite: no PNG is streamed from the
+        # server's /media route, which is where Community Cloud was failing.
+        history_plot = pd.DataFrame(
+            {
+                "time": history.index,
+                "usage_kwh": history.to_numpy(),
+                "series": "actual usage",
+            }
         )
-        ax.axvline(
-            origin, color="grey", ls="--", lw=1, label="origin (last reading)"
-        )
-        target = pd.Timestamp(result["target_time"])
-        ax.errorbar(
-            [target],
-            [result["prediction_kwh"]],
-            yerr=[
-                [result["prediction_kwh"] - result["interval_low_kwh"]],
-                [result["interval_high_kwh"] - result["prediction_kwh"]],
-            ],
-            fmt="o",
-            color="#d62728",
-            capsize=5,
-            label="forecast (90% interval)",
-        )
-        ax.set_ylabel("kWh")
-        ax.set_xlabel("datetime")
-        ax.legend(loc="upper left", fontsize=8)
-        ax.grid(alpha=0.3)
-        fig.autofmt_xdate()
-        st.pyplot(fig)
-        plt.close(fig)
 
-        test_mae = model_info["test_mae"]
-        test_mae_text = f"{test_mae:.3f} kWh" if test_mae is not None else "n/a"
-        coverage = model_info["interval_val_coverage"]
-        coverage_text = (
-            f"{coverage:.0%} coverage" if coverage is not None else "coverage unavailable"
+        target = pd.Timestamp(result["target_time"])
+
+        forecast_plot = pd.DataFrame(
+            {
+                "time": [target],
+                "usage_kwh": [result["prediction_kwh"]],
+                "low": [result["interval_low_kwh"]],
+                "high": [result["interval_high_kwh"]],
+                "series": "forecast (90% interval)",
+            }
         )
+
+        series_color = alt.Color(
+            "series:N",
+            title=None,
+            scale=alt.Scale(
+                domain=["actual usage", "forecast (90% interval)"],
+                range=["#1f77b4", "#d62728"],
+            ),
+        )
+
+        chart = (
+            alt.Chart(history_plot)
+            .mark_line(strokeWidth=1.5)
+            .encode(
+                x=alt.X("time:T", title="datetime"),
+                y=alt.Y("usage_kwh:Q", title="kWh"),
+                color=series_color,
+                tooltip=[
+                    alt.Tooltip("time:T", title="time"),
+                    alt.Tooltip("usage_kwh:Q", title="kWh", format=".3f"),
+                ],
+            )
+            + alt.Chart(forecast_plot)
+            .mark_rule(strokeWidth=2)
+            .encode(
+                x=alt.X("time:T"),
+                y=alt.Y("low:Q", title="kWh"),
+                y2=alt.Y2("high:Q"),
+                color=series_color,
+                tooltip=[
+                    alt.Tooltip("low:Q", title="interval low", format=".3f"),
+                    alt.Tooltip("high:Q", title="interval high", format=".3f"),
+                ],
+            )
+            + alt.Chart(forecast_plot)
+            .mark_point(filled=True, size=70)
+            .encode(
+                x=alt.X("time:T"),
+                y=alt.Y("usage_kwh:Q", title="kWh"),
+                color=series_color,
+                tooltip=[
+                    alt.Tooltip("time:T", title="time"),
+                    alt.Tooltip(
+                        "usage_kwh:Q", title="forecast", format=".3f"
+                    ),
+                ],
+            )
+            + alt.Chart(pd.DataFrame({"time": [origin]}))
+            .mark_rule(color="grey", strokeDash=[4, 4])
+            .encode(x=alt.X("time:T"))
+        ).configure_axis(grid=True, gridOpacity=0.3)
+
+        st.altair_chart(chart, width="stretch")
+
+        # ---------------------------------------------------------
+        # Model information
+        # ---------------------------------------------------------
+        test_mae = model_info["test_mae"]
+
+        test_mae_text = (
+            f"{test_mae:.3f} kWh"
+            if test_mae is not None
+            else "n/a"
+        )
+
+        coverage = model_info["interval_val_coverage"]
+
+        coverage_text = (
+            f"{coverage:.0%} coverage"
+            if coverage is not None
+            else "coverage unavailable"
+        )
+
         st.caption(
-            f"Model: {model_info['name']} · test MAE {test_mae_text} · "
+            f"Model: {model_info['name']} · "
+            f"test MAE {test_mae_text} · "
             f"interval calibrated on validation residuals ({coverage_text})."
         )
+
     else:
         st.info(
             "Choose a household, adjust the weather if you like, then press "
             "**Predict next hour**."
         )
 
+    # -------------------------------------------------------------
+    # Footer
+    # -------------------------------------------------------------
     st.divider()
+
     st.caption(
         "Data: LUMS REWD-P (59 households) and Open-Meteo ERA5 (6 cities). "
         "Predictions are for research/demo purposes, not billing or grid "

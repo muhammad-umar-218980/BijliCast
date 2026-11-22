@@ -374,7 +374,7 @@ def run(root: str | Path | None = None) -> None:
             + alt.Chart(pd.DataFrame({"time": [origin]}))
             .mark_rule(color="grey", strokeDash=[4, 4])
             .encode(x=alt.X("time:T"))
-        )
+        ).configure_axis(grid=True, gridOpacity=0.3)
 
         st.altair_chart(chart, width="stretch")
 
