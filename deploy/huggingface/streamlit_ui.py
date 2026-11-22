@@ -97,117 +97,292 @@ def _get_image_base64(path: Path) -> str:
 
 
 def _apply_theme_styles(bg_uri: str) -> None:
-    """Inject dark-blue, brown/clay, and whitish custom theme CSS with clearly visible header backdrop."""
-    bg_css = (
+    """Inject premium SaaS aesthetic CSS (Navy #13213F, Clay #C2643F, Off-white #F7F8FA)."""
+    hero_bg = (
         f"""
-        background-color: #0b101b;
-        background-image: linear-gradient(180deg, rgba(11, 16, 27, 0.05) 0%, rgba(11, 16, 27, 0.25) 240px, rgba(11, 16, 27, 0.75) 450px, #0b101b 600px), url('{bg_uri}');
+        background-color: #0B101B;
+        background-image: linear-gradient(180deg, rgba(11, 16, 27, 0.04) 0%, rgba(11, 16, 27, 0.18) 220px, rgba(11, 16, 27, 0.70) 450px, #0B101B 650px), url('{bg_uri}');
         background-repeat: no-repeat;
         background-position: top center;
         background-size: 100% auto;
         """
         if bg_uri
-        else "background-color: #0b101b;"
+        else "background-color: #0B101B;"
     )
 
     st.markdown(
         f"""
         <style>
-        /* Base page styling with ambient top background */
+        /* Base page styling */
         .stApp {{
-            {bg_css}
-            color: #f1f5f9;
+            {hero_bg}
+            color: #F7F8FA;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }}
 
-        /* Sidebar styling */
+        /* Reduce top padding above the main heading */
+        .block-container {{
+            padding-top: 1.2rem !important;
+            padding-bottom: 2.5rem !important;
+        }}
+
+        /* Sidebar styling and small logo */
         section[data-testid="stSidebar"] {{
-            background-color: #0d1424 !important;
-            border-right: 1px solid #1b2842;
+            background-color: #0D1424 !important;
+            border-right: 1px solid #1E2C4B;
+        }}
+        [data-testid="stSidebar"] img {{
+            max-width: 90px !important;
+            width: 90px !important;
+            height: auto !important;
         }}
 
-        /* Clean header styling without a bordered box */
-        .bc-header {{
-            padding: 14px 0 24px 0;
-            margin-bottom: 20px;
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-        }}
-        .bc-hero-sub {{
-            font-size: 11.5px;
-            font-weight: 700;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: #8da4c4;
-            margin-bottom: 6px;
-        }}
-        .bc-hero-title {{
-            font-size: 31px;
-            font-weight: 800;
-            color: #ffffff;
-            line-height: 1.25;
-            margin: 0 0 10px 0;
-            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95), 0 0 30px rgba(0, 0, 0, 0.8);
-        }}
-        .bc-hero-desc {{
-            font-size: 14.5px;
-            color: #f1f5f9;
-            margin: 0 0 18px 0;
-            max-width: 860px;
-            line-height: 1.5;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
-        }}
-
-        /* Badges / capsules */
-        .bc-badges {{
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }}
-        .bc-badge {{
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.20);
-            padding: 4px 13px;
-            border-radius: 999px;
+        /* Section Eyebrow Labels */
+        .saas-eyebrow {{
             font-size: 11px;
             font-weight: 700;
-            letter-spacing: 0.08em;
-            color: #e2e8f0;
+            letter-spacing: 0.16em;
             text-transform: uppercase;
-            backdrop-filter: blur(4px);
-        }}
-        .bc-badge-clay {{
-            background: rgba(207, 100, 57, 0.20);
-            border-color: #cf6439;
-            color: #f8af90;
-        }}
-
-        /* Custom Cards */
-        .bc-card {{
-            background-color: #131b2e;
-            border: 1px solid #1e2c47;
-            border-radius: 14px;
-            padding: 22px 24px;
-            margin-bottom: 18px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.30);
-        }}
-        .bc-card h3 {{
-            color: #ffffff;
-            font-size: 17px;
-            margin-top: 0;
+            color: #C2643F;
             margin-bottom: 8px;
         }}
-        .bc-card p {{
-            color: #94a3b8;
+
+        /* Section Headings */
+        .saas-heading {{
+            font-size: 28px;
+            font-weight: 800;
+            color: #FFFFFF;
+            line-height: 1.25;
+            margin: 0 0 12px 0;
+            letter-spacing: -0.01em;
+        }}
+
+        .saas-lead {{
+            font-size: 15px;
+            color: #94A3B8;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }}
+
+        /* Hero Container */
+        .saas-hero-container {{
+            padding: 2px 0 20px 0;
+            margin-bottom: 24px;
+        }}
+        .saas-hero-title {{
+            font-size: 34px;
+            font-weight: 850;
+            color: #FFFFFF;
+            line-height: 1.2;
+            letter-spacing: -0.015em;
+            margin: 0 0 16px 0;
+            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95), 0 0 30px rgba(0, 0, 0, 0.85);
+        }}
+        .saas-hero-desc {{
+            font-size: 16px;
+            color: #E2E8F0;
+            line-height: 1.6;
+            margin: 0 0 24px 0;
+            max-width: 650px;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+        }}
+
+        /* Illustrative Preview Card */
+        .saas-preview-card {{
+            background: #13213F;
+            border: 1px solid #243555;
+            border-radius: 16px;
+            padding: 22px 24px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+        }}
+        .saas-preview-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1E2C4B;
+            padding-bottom: 12px;
+            margin-bottom: 14px;
+        }}
+        .saas-preview-title {{
+            font-size: 13px;
+            font-weight: 700;
+            color: #E2E8F0;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }}
+        .saas-preview-badge {{
+            background: rgba(194, 100, 63, 0.22);
+            color: #F8AF90;
+            border: 1px solid #C2643F;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            letter-spacing: 0.06em;
+        }}
+
+        /* KPI / Stat Box */
+        .saas-kpi-card {{
+            background: #13213F;
+            border: 1px solid #1E2C4B;
+            border-radius: 14px;
+            padding: 22px 20px;
+            text-align: left;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }}
+        .saas-kpi-val {{
+            font-size: 36px;
+            font-weight: 850;
+            color: #C2643F;
+            line-height: 1.1;
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
+        }}
+        .saas-kpi-label {{
             font-size: 13.5px;
-            margin-bottom: 0;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 4px;
+        }}
+        .saas-kpi-sub {{
+            font-size: 12px;
+            color: #667085;
+            line-height: 1.4;
+        }}
+
+        /* Editorial 2-Column Cards */
+        .saas-editorial-card {{
+            background: #13213F;
+            border: 1px solid #1E2C4B;
+            border-radius: 16px;
+            padding: 28px 28px;
+            height: 100%;
+        }}
+        .saas-editorial-card h4 {{
+            font-size: 18px;
+            font-weight: 750;
+            color: #FFFFFF;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }}
+        .saas-editorial-card p {{
+            font-size: 14px;
+            color: #94A3B8;
+            line-height: 1.65;
+            margin-bottom: 14px;
+        }}
+
+        /* How it Works Step Card */
+        .saas-step-card {{
+            background: #13213F;
+            border: 1px solid #1E2C4B;
+            border-radius: 14px;
+            padding: 24px 22px;
+            height: 100%;
+            position: relative;
+        }}
+        .saas-step-num {{
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 800;
+            color: #C2643F;
+            background: rgba(194, 100, 63, 0.15);
+            padding: 3px 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            letter-spacing: 0.08em;
+        }}
+        .saas-step-title {{
+            font-size: 16px;
+            font-weight: 750;
+            color: #FFFFFF;
+            margin-bottom: 8px;
+        }}
+        .saas-step-desc {{
+            font-size: 13px;
+            color: #94A3B8;
+            line-height: 1.6;
+            margin: 0;
+        }}
+
+        /* Final CTA Section */
+        .saas-final-cta {{
+            background: linear-gradient(135deg, #13213F 0%, #1A2B50 100%);
+            border: 1px solid #243555;
+            border-radius: 18px;
+            padding: 44px 36px;
+            text-align: center;
+            margin: 40px 0 28px 0;
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+        }}
+        .saas-final-cta h2 {{
+            font-size: 34px;
+            font-weight: 850;
+            color: #FFFFFF;
+            margin: 0 0 12px 0;
+            letter-spacing: -0.01em;
+        }}
+        .saas-final-cta p {{
+            font-size: 15.5px;
+            color: #CBD5E1;
+            max-width: 680px;
+            margin: 0 auto 24px auto;
             line-height: 1.6;
         }}
 
-        /* Metric boxes */
+        /* Footer */
+        .saas-footer {{
+            border-top: 1px solid #1E2C4B;
+            padding: 32px 0 16px 0;
+            margin-top: 36px;
+            color: #667085;
+            font-size: 12.5px;
+            line-height: 1.6;
+        }}
+        .saas-footer a {{
+            color: #C2643F;
+            text-decoration: none;
+            font-weight: 600;
+        }}
+        .saas-footer a:hover {{
+            text-decoration: underline;
+        }}
+
+        /* Buttons */
+        button[kind="primary"] {{
+            background-color: #C2643F !important;
+            border-color: #C2643F !important;
+            color: #FFFFFF !important;
+            font-weight: 700 !important;
+            font-size: 14.5px !important;
+            padding: 10px 22px !important;
+            border-radius: 10px !important;
+            box-shadow: 0 6px 16px rgba(194, 100, 63, 0.35) !important;
+            transition: all 0.2s ease !important;
+        }}
+        button[kind="primary"]:hover {{
+            background-color: #D6724B !important;
+            border-color: #D6724B !important;
+            transform: translateY(-1px) !important;
+        }}
+        button[kind="secondary"] {{
+            background-color: transparent !important;
+            border: 1px solid #2E4166 !important;
+            color: #E2E8F0 !important;
+            font-weight: 600 !important;
+            font-size: 14.5px !important;
+            padding: 10px 20px !important;
+            border-radius: 10px !important;
+        }}
+        button[kind="secondary"]:hover {{
+            border-color: #C2643F !important;
+            color: #FFFFFF !important;
+        }}
+
+        /* Prediction metric boxes */
         .bc-metric-box {{
-            background-color: #131b2e;
-            border: 1px solid #1f2c47;
+            background-color: #13213F;
+            border: 1px solid #1E2C4B;
             border-radius: 14px;
             padding: 18px 20px;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
@@ -217,62 +392,36 @@ def _apply_theme_styles(bg_uri: str) -> None:
             font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: #8da4c4;
+            color: #8DA4C4;
             margin-bottom: 8px;
         }}
         .bc-metric-val {{
             font-size: 28px;
             font-weight: 800;
-            color: #cf6439;
+            color: #C2643F;
             line-height: 1.1;
             margin-bottom: 4px;
         }}
         .bc-metric-sub {{
             font-size: 12px;
-            color: #64748b;
+            color: #64748B;
         }}
 
-        /* Steppers & inputs */
+        /* Input styling */
         div[data-baseweb="input"] {{
             background-color: #162035 !important;
             border-color: #243555 !important;
             border-radius: 10px !important;
         }}
         div[data-baseweb="input"] input {{
-            color: #f1f5f9 !important;
+            color: #F1F5F9 !important;
             font-weight: 600 !important;
         }}
         div[data-baseweb="select"] > div {{
             background-color: #162035 !important;
             border-color: #243555 !important;
             border-radius: 10px !important;
-            color: #ffffff !important;
-        }}
-
-        /* Primary Button (Clay / Brown) */
-        button[kind="primary"] {{
-            background-color: #cf6439 !important;
-            border-color: #cf6439 !important;
-            color: #ffffff !important;
-            font-weight: 700 !important;
-            font-size: 15px !important;
-            padding: 10px 22px !important;
-            border-radius: 11px !important;
-            box-shadow: 0 6px 18px rgba(207, 100, 57, 0.35) !important;
-            transition: all 0.2s ease !important;
-        }}
-        button[kind="primary"]:hover {{
-            background-color: #df7449 !important;
-            border-color: #df7449 !important;
-            transform: translateY(-1px) !important;
-            box-shadow: 0 8px 22px rgba(207, 100, 57, 0.45) !important;
-        }}
-
-        /* Expander styling */
-        div[data-testid="stExpander"] {{
-            background-color: #131b2e !important;
-            border: 1px solid #1f2c47 !important;
-            border-radius: 12px !important;
+            color: #FFFFFF !important;
         }}
         </style>
         """,
@@ -280,149 +429,399 @@ def _apply_theme_styles(bg_uri: str) -> None:
     )
 
 
+def _render_hero_sparkline(service) -> alt.Chart:
+    """Generate an illustrative Altair energy load curve for the hero section."""
+    raw_hist = service._history_by_house.get("House#1")
+    if raw_hist is None or len(raw_hist) < 24:
+        return None
+
+    tail = raw_hist.tail(24)
+    df = pd.DataFrame({
+        "time": tail.index,
+        "kwh": tail.values,
+    })
+
+    line = (
+        alt.Chart(df)
+        .mark_area(
+            line={"color": "#C2643F", "width": 2.5},
+            color=alt.Gradient(
+                gradient="linear",
+                stops=[
+                    alt.GradientStop(color="rgba(194, 100, 63, 0.35)", offset=0),
+                    alt.GradientStop(color="rgba(19, 33, 63, 0.0)", offset=1),
+                ],
+                x1=1,
+                x2=1,
+                y1=1,
+                y2=0,
+            ),
+        )
+        .encode(
+            x=alt.X("time:T", axis=alt.Axis(labels=False, ticks=False, title=None, grid=False)),
+            y=alt.Y("kwh:Q", axis=alt.Axis(labels=False, ticks=False, title=None, grid=False)),
+        )
+        .properties(height=110)
+        .configure_view(strokeOpacity=0)
+        .configure(background="transparent")
+    )
+    return line
+
+
 def render_home_page(root: Path, service) -> None:
-    """Render the BijliCast home page without a boxed hero container."""
+    """Render the redesigned 8-section SaaS homepage."""
     model_info = service.model_info()
 
-    # Open header seamlessly on top of background image
+    # -----------------------------------------------------------------------
+    # SECTION 1: HERO
+    # -----------------------------------------------------------------------
+    st.markdown('<div class="saas-hero-container">', unsafe_allow_html=True)
+    st.markdown('<div class="saas-eyebrow">RESIDENTIAL ENERGY INTELLIGENCE</div>', unsafe_allow_html=True)
+    st.markdown('<h1 class="saas-hero-title">BijliCast - Weather-Aware Household Electricity Consumption Forecasting in Pakistan</h1>', unsafe_allow_html=True)
     st.markdown(
         """
-        <div class="bc-header">
-            <div class="bc-hero-sub">NATIONAL RESIDENTIAL ENERGY FORECASTING</div>
-            <div class="bc-hero-title">BijliCast : Weather-Aware Household Electricity Consumption Forecasting in Pakistan</div>
-            <div class="bc-hero-desc">
-                Next-hour residential electricity demand forecasting for Pakistan · LUMS REWD-P smart-meter telemetry
-                across 59 households and 6 major cities.
-            </div>
-            <div class="bc-badges">
-                <span class="bc-badge bc-badge-clay">HistGradientBoosting</span>
-                <span class="bc-badge">LUMS REWD-P DATASET</span>
-                <span class="bc-badge">59 HOUSEHOLDS</span>
-                <span class="bc-badge">6 MAJOR CITIES</span>
-                <span class="bc-badge">ZERO NEXT-HOUR WEATHER DEPENDENCY</span>
-            </div>
-        </div>
+        <p class="saas-hero-desc">
+            Next-hour residential electricity demand forecasting across Pakistan.
+            Powered by LUMS REWD-P smart-meter telemetry and real-time weather analytics—built to
+            anticipate peak tariffs, mitigate load shedding uncertainty, and stabilize household power
+            budgets without relying on future weather forecasts.
+        </p>
         """,
         unsafe_allow_html=True,
     )
 
-    # Core Problem & Solution Columns
-    c1, c2 = st.columns(2)
-
-    with c1:
+    cta_c1, cta_c2, _ = st.columns([1.1, 1.1, 2.2], gap="small")
+    with cta_c1:
+        if st.button("Explore Predictions →", type="primary", use_container_width=True, key="hero_cta_pred"):
+            st.session_state["nav_page"] = "Predict"
+            st.rerun()
+    with cta_c2:
         st.markdown(
             """
-            <div class="bc-card">
-                <h3>⚠️ The Energy Challenge in Pakistan</h3>
-                <p>
-                    Pakistan's residential sector experiences severe grid stress, frequent unannounced load-shedding,
-                    and steep peak-hour tariff multipliers (17:00 – 22:00). Extreme seasonal temperatures across
-                    cities like Lahore, Multan, and Karachi cause erratic AC cooling surges that strain sub-stations
-                    and inflate consumer bills without warning.
-                </p>
-                <br>
-                <p>
-                    Existing forecasting solutions typically fail because they require accurate future weather forecasts
-                    or depend on high-cost industrial SCADA systems unavailable to ordinary households.
-                </p>
-            </div>
+            <a href="#how-it-works" style="display:inline-block; width:100%; text-align:center; padding:10px 18px; border:1px solid #2E4166; border-radius:10px; color:#E2E8F0; text-decoration:none; font-weight:600; font-size:14.5px; background:rgba(255,255,255,0.03);">
+                Explore the Technology ↓
+            </a>
             """,
             unsafe_allow_html=True,
         )
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    with c2:
-        st.markdown(
-            """
-            <div class="bc-card">
-                <h3>💡 How BijliCast Solves It</h3>
-                <p>
-                    BijliCast delivers ultra-low-latency next-hour consumption predictions using <b>only current-hour
-                    ambient weather</b> and causal 168-hour (7-day) historical usage sequences. Because it uses no next-hour
-                    weather predictions, the model is resilient against imperfect meteorological forecasts.
-                </p>
-                <br>
-                <p>
-                    Empirical 90% prediction intervals calibrated on validation residuals give consumers and grid
-                    operators actionable bounds to optimize battery storage (UPS/solar), shift appliance usage, and
-                    avoid expensive peak-slab tariff escalations.
-                </p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    # Model Highlights Row
-    st.markdown("### Model & System Overview")
-    m1, m2, m3, m4 = st.columns(4)
-
-    test_mae = model_info.get("test_mae")
-    test_r2 = model_info.get("test_r2")
-    n_rows = model_info.get("n_train_rows", 408048)
-    coverage = model_info.get("interval_val_coverage", 0.90)
-
-    m1.markdown(
-        f"""
-        <div class="bc-metric-box">
-            <div class="bc-metric-label">Model Architecture</div>
-            <div class="bc-metric-val" style="font-size:20px; color:#ffffff;">{model_info.get('name', 'HistGradientBoosting')}</div>
-            <div class="bc-metric-sub">Trained on {n_rows:,} hourly rows</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    m2.markdown(
-        f"""
-        <div class="bc-metric-box">
-            <div class="bc-metric-label">Held-out Test MAE</div>
-            <div class="bc-metric-val">{test_mae:.3f} <span style="font-size:16px;">kWh</span></div>
-            <div class="bc-metric-sub">High precision per household</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    m3.markdown(
-        f"""
-        <div class="bc-metric-box">
-            <div class="bc-metric-label">Held-out Test R²</div>
-            <div class="bc-metric-val">{test_r2:.3f}</div>
-            <div class="bc-metric-sub">Strong variance explanation</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    m4.markdown(
-        f"""
-        <div class="bc-metric-box">
-            <div class="bc-metric-label">Interval Coverage</div>
-            <div class="bc-metric-val">{coverage:.0%}</div>
-            <div class="bc-metric-sub">90% calibrated validation band</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
+    # -----------------------------------------------------------------------
+    # SECTION 2: PROJECT STATISTICS
+    # -----------------------------------------------------------------------
     st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown('<div class="saas-eyebrow">EMPIRICAL SCALE</div>', unsafe_allow_html=True)
+    st.markdown('<h2 class="saas-heading">High-Resolution Telemetry at Grid Scale</h2>', unsafe_allow_html=True)
 
-    # Navigation Call to Action
+    k1, k2, k3, k4 = st.columns(4, gap="medium")
+    with k1:
+        st.markdown(
+            """
+            <div class="saas-kpi-card">
+                <div class="saas-kpi-val">408,048</div>
+                <div class="saas-kpi-label">Hourly Records</div>
+                <div class="saas-kpi-sub">Cleaned and temporally validated smart-meter rows across multi-year telemetry.</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with k2:
+        st.markdown(
+            """
+            <div class="saas-kpi-card">
+                <div class="saas-kpi-val">59</div>
+                <div class="saas-kpi-label">Households</div>
+                <div class="saas-kpi-sub">Granular residential profiles capturing appliance counts, area, and occupant demographics.</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with k3:
+        st.markdown(
+            """
+            <div class="saas-kpi-card">
+                <div class="saas-kpi-val">6</div>
+                <div class="saas-kpi-label">Pakistani Cities</div>
+                <div class="saas-kpi-sub">Lahore, Karachi, Islamabad, Faisalabad, Multan, and Peshawar covering diverse climate zones.</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with k4:
+        st.markdown(
+            """
+            <div class="saas-kpi-card">
+                <div class="saas-kpi-val">90%</div>
+                <div class="saas-kpi-label">Interval Coverage</div>
+                <div class="saas-kpi-sub">Calibrated empirical confidence bounds covering 90% of unseen validation hours.</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # -----------------------------------------------------------------------
+    # SECTION 3: ENERGY CHALLENGE
+    # -----------------------------------------------------------------------
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown('<div class="saas-eyebrow">THE CRISIS CONTEXT</div>', unsafe_allow_html=True)
+    st.markdown('<h2 class="saas-heading">Pakistan’s Residential Energy Challenge</h2>', unsafe_allow_html=True)
+    st.markdown(
+        '<p class="saas-lead">Why macro-level utility forecasting fails to protect households from tariff spikes and grid instability.</p>',
+        unsafe_allow_html=True,
+    )
+
+    c_left, c_right = st.columns(2, gap="large")
+    with c_left:
+        st.markdown(
+            """
+            <div class="saas-editorial-card">
+                <div class="saas-eyebrow">CLIMATE & PEAK TARIFFS</div>
+                <h4>Extreme Weather & Tariff Multipliers</h4>
+                <p>
+                    Residential electricity consumers in Pakistan face aggressive Time-of-Use (ToU) tariff schedules.
+                    Between <b>17:00 and 22:00</b>, per-unit billing rates surge, penalizing unmanaged appliance operation.
+                </p>
+                <p>
+                    Simultaneously, summer temperatures exceeding 45°C across the Indus plains drive non-linear cooling
+                    surges from air conditioners. These extreme spikes frequently overload local distribution transformers,
+                    causing unscheduled feeder tripping and prolonged load shedding.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with c_right:
+        st.markdown(
+            """
+            <div class="saas-editorial-card">
+                <div class="saas-eyebrow">THE VISIBILITY GAP</div>
+                <h4>The Household Telemetry Deficit</h4>
+                <p>
+                    Traditional energy utility analytics are aggregated at the grid substation level. Individual
+                    households receive only monthly aggregate bills, leaving them blind to intra-day consumption patterns.
+                </p>
+                <p>
+                    Furthermore, standard machine learning forecasting literature assumes access to perfect <i>next-hour</i>
+                    weather forecasts. In practice, regional meteorological predictions are prone to lag and error.
+                    BijliCast solves this by relying strictly on <b>current-hour ambient weather</b> and <b>causal 168-hour usage sequences</b>.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # -----------------------------------------------------------------------
+    # SECTION 4: HOW BIJLICAST WORKS
+    # -----------------------------------------------------------------------
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown('<div id="how-it-works"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="saas-eyebrow">METHODOLOGY PIPELINE</div>', unsafe_allow_html=True)
+    st.markdown('<h2 class="saas-heading">How BijliCast Works</h2>', unsafe_allow_html=True)
+    st.markdown(
+        '<p class="saas-lead">Three sequential, causal processing stages engineered for sub-10ms inference latency without forward weather dependence.</p>',
+        unsafe_allow_html=True,
+    )
+
+    s1, s2, s3 = st.columns(3, gap="medium")
+    with s1:
+        st.markdown(
+            """
+            <div class="saas-step-card">
+                <span class="saas-step-num">STAGE 01</span>
+                <div class="saas-step-title">Current Weather Ingestion</div>
+                <p class="saas-step-desc">
+                    Captures 8 real-time ambient inputs from ERA5: temperature, relative humidity, dew point, solar irradiance,
+                    pressure, precipitation, and trigonometric wind components. No forward weather predictions are ingested.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with s2:
+        st.markdown(
+            """
+            <div class="saas-step-card">
+                <span class="saas-step-num">STAGE 02</span>
+                <div class="saas-step-title">168-Hour Causal Sequence</div>
+                <p class="saas-step-desc">
+                    Extracts autoregressive lags (1h, 2h, 3h), diurnal 24-hour daily rhythm, and 168-hour weekly seasonality.
+                    Rolling 3h and 24h consumption statistics capture instantaneous household volatility.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with s3:
+        st.markdown(
+            """
+            <div class="saas-step-card">
+                <span class="saas-step-num">STAGE 03</span>
+                <div class="saas-step-title">Inference & Confidence Bounds</div>
+                <p class="saas-step-desc">
+                    HistGradientBoosting trees generate point estimates in under 10 milliseconds, accompanied by
+                    calibrated 90% empirical prediction intervals to quantify uncertainty before the target hour arrives.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # -----------------------------------------------------------------------
+    # SECTION 5: MODEL PERFORMANCE
+    # -----------------------------------------------------------------------
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown('<div class="saas-eyebrow">RIGOROUS EVALUATION</div>', unsafe_allow_html=True)
+    st.markdown('<h2 class="saas-heading">Benchmark-Beating Model Performance</h2>', unsafe_allow_html=True)
+    st.markdown(
+        '<p class="saas-lead">Evaluated strictly on chronological, unseen held-out test splits across 72,059 validation rows.</p>',
+        unsafe_allow_html=True,
+    )
+
+    perf_metrics, perf_chart = st.columns([1, 1.2], gap="large")
+
+    with perf_metrics:
+        test_mae = model_info.get("test_mae", 0.250)
+        test_r2 = model_info.get("test_r2", 0.729)
+        test_rmse = model_info.get("test_rmse", 0.427)
+
+        st.markdown(
+            f"""
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-bottom:16px;">
+                <div class="saas-kpi-card">
+                    <div class="saas-kpi-val" style="font-size:30px;">{test_mae:.3f} <span style="font-size:14px; color:#8DA4C4;">kWh</span></div>
+                    <div class="saas-kpi-label">Held-out Test MAE</div>
+                    <div class="saas-kpi-sub">Outperforms 1h persistence baseline (0.276 kWh).</div>
+                </div>
+                <div class="saas-kpi-card">
+                    <div class="saas-kpi-val" style="font-size:30px;">{test_r2:.3f}</div>
+                    <div class="saas-kpi-label">Held-out Test R²</div>
+                    <div class="saas-kpi-sub">Explains ~73% of total consumption variance.</div>
+                </div>
+                <div class="saas-kpi-card">
+                    <div class="saas-kpi-val" style="font-size:30px;">{test_rmse:.3f} <span style="font-size:14px; color:#8DA4C4;">kWh</span></div>
+                    <div class="saas-kpi-label">Held-out Test RMSE</div>
+                    <div class="saas-kpi-sub">Strict penalty on large residual deviations.</div>
+                </div>
+                <div class="saas-kpi-card">
+                    <div class="saas-kpi-val" style="font-size:30px;">90.0%</div>
+                    <div class="saas-kpi-label">Interval Coverage</div>
+                    <div class="saas-kpi-sub">Calibrated 5th–95th percentile validation residuals.</div>
+                </div>
+            </div>
+            <div class="saas-editorial-card" style="padding:18px 20px;">
+                <h4 style="font-size:14.5px; margin-bottom:6px;">Model Selection Rationale</h4>
+                <p style="font-size:12.5px; color:#8DA4C4; margin:0;">
+                    While Random Forest tied closely on validation error, HistGradientBoosting achieved the top one-shot test MAE
+                    with an artifact footprint of just 1.4 MB (vs. 270 MB), enabling seamless sub-second execution on free hosting tiers.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with perf_chart:
+        eval_img_path = root / "reports" / "figures" / "11_test_actual_vs_predicted.png"
+        if eval_img_path.exists():
+            st.image(str(eval_img_path), caption="Held-out Test Evaluation: Actual vs. Predicted Next-Hour Consumption", use_container_width=True)
+        else:
+            st.info("Evaluation chart reports/figures/11_test_actual_vs_predicted.png will be displayed here.")
+
+    # -----------------------------------------------------------------------
+    # SECTION 6: DATASET & TECHNOLOGY
+    # -----------------------------------------------------------------------
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown('<div class="saas-eyebrow">FOUNDATIONAL INFRASTRUCTURE</div>', unsafe_allow_html=True)
+    st.markdown('<h2 class="saas-heading">Dataset & Technology Stack</h2>', unsafe_allow_html=True)
+
+    d1, d2 = st.columns(2, gap="large")
+    with d1:
+        st.markdown(
+            """
+            <div class="saas-editorial-card">
+                <div class="saas-eyebrow">RESEARCH TELEMETRY</div>
+                <h4>LUMS REWD-P & Open-Meteo ERA5</h4>
+                <p>
+                    <b>LUMS REWD-P Dataset:</b> High-resolution residential electricity dataset curated by the Energy Informatics Group
+                    at Lahore University of Management Sciences (LUMS). Spans 59 individual residential homes across 6 major cities,
+                    complete with granular architectural and appliance metadata.
+                </p>
+                <p>
+                    <b>Open-Meteo ERA5 Reanalysis:</b> Geographically localized European Centre for Medium-Range Weather Forecasts (ECMWF)
+                    reanalysis datasets aligned down to the coordinate grid of each monitored city.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with d2:
+        st.markdown(
+            """
+            <div class="saas-editorial-card">
+                <div class="saas-eyebrow">PRODUCTION STACK</div>
+                <h4>Modern, Portable ML Architecture</h4>
+                <p>
+                    <b>Core Frameworks:</b> Python 3.13, Scikit-Learn (<code>HistGradientBoostingRegressor</code>), NumPy, Pandas, and PyArrow Parquet storage.
+                </p>
+                <p>
+                    <b>Serving & Analytics:</b> FastAPI asynchronous microservice, Altair & Vega-Lite declarative visualization engine,
+                    and responsive Streamlit web deployment compatible with local, Community Cloud, and Hugging Face environments.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # -----------------------------------------------------------------------
+    # SECTION 7: FINAL CTA
+    # -----------------------------------------------------------------------
     st.markdown(
         """
-        <div style="background:#131b2e; border:1px solid #cf6439; border-radius:14px; padding:22px; text-align:center;">
-            <h4 style="margin:0 0 8px 0; color:#ffffff;">Ready to explore household energy forecasts?</h4>
-            <p style="color:#94a3b8; margin:0 0 16px 0; font-size:14px;">
-                Select any of the 59 monitored households, adjust ambient weather parameters for what-if scenarios, and inspect 3 interactive analytical charts.
+        <div class="saas-final-cta">
+            <div class="saas-eyebrow" style="color:#F8AF90;">READY TO FORECAST</div>
+            <h2>Your next hour, better understood.</h2>
+            <p>
+                Explore real-time next-hour electricity consumption forecasts across 59 Pakistani households,
+                simulate what-if weather variations, and inspect detailed appliance profiles.
             </p>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    cta = st.button("⚡ Go to Forecast & Prediction Dashboard →", type="primary", use_container_width=True)
-    if cta:
-        st.session_state["nav_page"] = "Predict"
-        st.rerun()
+    cta_btn_col1, cta_btn_col2, cta_btn_col3 = st.columns([1, 1.2, 1])
+    with cta_btn_col2:
+        if st.button("Explore Predictions Dashboard →", type="primary", use_container_width=True, key="final_cta_btn"):
+            st.session_state["nav_page"] = "Predict"
+            st.rerun()
+
+    # -----------------------------------------------------------------------
+    # SECTION 8: FOOTER
+    # -----------------------------------------------------------------------
+    st.markdown(
+        """
+        <div class="saas-footer">
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:12px;">
+                <div>
+                    <span style="font-size:16px; font-weight:800; color:#FFFFFF;">⚡ BijliCast</span>
+                    <div style="color:#667085; font-size:12px; margin-top:2px;">Weather-Aware Household Electricity Consumption Forecasting in Pakistan</div>
+                </div>
+                <div>
+                    <a href="https://github.com/muhammad-umar-218980/BijliCast" target="_blank">GitHub Repository ↗</a>
+                </div>
+            </div>
+            <div style="border-top:1px solid #1E2C4B; padding-top:12px; font-size:11.5px; color:#667085;">
+                <b>Data Acknowledgements:</b> LUMS Energy Informatics Group (REWD-P Dataset) and Open-Meteo (ERA5 Climate Reanalysis).
+                <br>
+                <b>Academic Disclaimer:</b> Developed for CT-378 Machine Learning. Predictions and intervals are intended for academic research, planning, and educational demonstration purposes.
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def render_predict_page(service) -> None:
@@ -441,16 +840,16 @@ def render_predict_page(service) -> None:
     # Top Header for Predict (no boxed border)
     st.markdown(
         f"""
-        <div class="bc-header">
-            <div class="bc-hero-sub">MAKE A PREDICTION</div>
-            <div class="bc-hero-title">Next hour for {house}, {city}</div>
-            <div class="bc-hero-desc">
+        <div style="padding:14px 0 20px 0;">
+            <div class="saas-eyebrow">MAKE A PREDICTION</div>
+            <h2 style="font-size:32px; font-weight:850; color:#FFFFFF; margin:0 0 8px 0;">Next hour for {house}, {city}</h2>
+            <div style="color:#CBD5E1; font-size:14.5px; margin-bottom:14px;">
                 Origin {origin:%d %b %Y, %H:%M} → target {target:%d %b %Y, %H:%M}. Adjust the weather inputs below to ask a what-if question.
             </div>
-            <div class="bc-badges">
-                <span class="bc-badge bc-badge-clay">{model_info['name']}</span>
-                <span class="bc-badge">90% INTERVAL</span>
-                <span class="bc-badge">8 WEATHER INPUTS</span>
+            <div style="display:flex; gap:8px;">
+                <span class="saas-preview-badge">{model_info['name']}</span>
+                <span style="background:rgba(255,255,255,0.08); color:#CBD5E1; font-size:10.5px; font-weight:700; padding:2px 10px; border-radius:999px;">90% INTERVAL</span>
+                <span style="background:rgba(255,255,255,0.08); color:#CBD5E1; font-size:10.5px; font-weight:700; padding:2px 10px; border-radius:999px;">8 WEATHER INPUTS</span>
             </div>
         </div>
         """,
@@ -502,10 +901,10 @@ def render_predict_page(service) -> None:
             f"""
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                 <div>
-                    <h2 style="margin:0; font-size:22px; color:#ffffff;">Forecast</h2>
+                    <h3 style="margin:0; font-size:22px; color:#ffffff;">Forecast</h3>
                     <span style="color:#94a3b8; font-size:13px;">{house} · {city} · target {target:%d %b %H:%M}</span>
                 </div>
-                <span class="bc-badge bc-badge-clay">TYPICAL VS 72 H MEAN</span>
+                <span class="saas-preview-badge">TYPICAL VS 72 H MEAN</span>
             </div>
             """,
             unsafe_allow_html=True,
@@ -544,7 +943,7 @@ def render_predict_page(service) -> None:
             f"""
             <div class="bc-metric-box">
                 <div class="bc-metric-label">CHANGE VS LAST HOUR</div>
-                <div class="bc-metric-val" style="color:{'#cf6439' if result['delta_kwh'] >= 0 else '#5b8db8'};">{result['delta_kwh']:+.3f} <span style="font-size:16px; color:#cbd5e1;">kWh</span></div>
+                <div class="bc-metric-val" style="color:{'#C2643F' if result['delta_kwh'] >= 0 else '#5b8db8'};">{result['delta_kwh']:+.3f} <span style="font-size:16px; color:#cbd5e1;">kWh</span></div>
                 <div class="bc-metric-sub">Last reading {result['last_hour_kwh']:.3f} kWh</div>
             </div>
             """,
@@ -605,13 +1004,13 @@ def render_predict_page(service) -> None:
 
         mean_line = (
             alt.Chart(mean_line_df)
-            .mark_line(strokeDash=[4, 4], color="#cf6439", strokeWidth=1.5)
+            .mark_line(strokeDash=[4, 4], color="#C2643F", strokeWidth=1.5)
             .encode(x=alt.X("time:T"), y=alt.Y("mean_val:Q"))
         )
 
         interval_rule = (
             alt.Chart(forecast_plot)
-            .mark_rule(strokeWidth=3, color="#cf6439")
+            .mark_rule(strokeWidth=3, color="#C2643F")
             .encode(
                 x=alt.X("time:T"),
                 y=alt.Y("low:Q"),
@@ -625,7 +1024,7 @@ def render_predict_page(service) -> None:
 
         forecast_point = (
             alt.Chart(forecast_plot)
-            .mark_point(filled=True, size=90, color="#cf6439")
+            .mark_point(filled=True, size=90, color="#C2643F")
             .encode(
                 x=alt.X("time:T"),
                 y=alt.Y("usage_kwh:Q"),
@@ -638,7 +1037,7 @@ def render_predict_page(service) -> None:
 
         forecast_text = (
             alt.Chart(forecast_plot)
-            .mark_text(dx=18, dy=-2, color="#cf6439", fontSize=13, fontWeight="bold")
+            .mark_text(dx=18, dy=-2, color="#C2643F", fontSize=13, fontWeight="bold")
             .encode(x=alt.X("time:T"), y=alt.Y("usage_kwh:Q"), text=alt.Text("label:N"))
         )
 
@@ -698,7 +1097,7 @@ def render_predict_page(service) -> None:
                         "color_cat:N",
                         scale=alt.Scale(
                             domain=["Regular", "Peak (17-22h)"],
-                            range=["#5b8db8", "#cf6439"],
+                            range=["#5b8db8", "#C2643F"],
                         ),
                         legend=None,
                     ),
@@ -755,7 +1154,7 @@ def render_predict_page(service) -> None:
                         "color_cat:N",
                         scale=alt.Scale(
                             domain=["Previous days", "Latest day"],
-                            range=["#5b8db8", "#cf6439"],
+                            range=["#5b8db8", "#C2643F"],
                         ),
                         legend=None,
                     ),
@@ -793,11 +1192,11 @@ def render_predict_page(service) -> None:
     else:
         st.markdown(
             f"""
-            <div style="background:#131b2e; border:1px solid #1f2c47; border-radius:14px; padding:24px; text-align:center; margin-top:20px;">
-                <p style="color:#cbd5e1; font-size:15px; margin:0 0 6px 0;">
+            <div style="background:#13213F; border:1px solid #1E2C4B; border-radius:14px; padding:24px; text-align:center; margin-top:20px;">
+                <p style="color:#CBD5E1; font-size:15px; margin:0 0 6px 0;">
                     ⚡ Ready to forecast next-hour electricity consumption for <b>{house}</b>.
                 </p>
-                <p style="color:#64748b; font-size:13px; margin:0;">
+                <p style="color:#667085; font-size:13px; margin:0;">
                     Click the <b>Predict next hour</b> button above to generate the prediction metrics and the 3 analytical charts.
                 </p>
             </div>
@@ -810,7 +1209,7 @@ def run(root: str | Path | None = None) -> None:
     root = Path(root or Path(__file__).resolve().parents[1]).resolve()
 
     st.set_page_config(
-        page_title="BijliCast - next-hour electricity forecast",
+        page_title="BijliCast - Next-Hour Electricity Forecast",
         page_icon="⚡",
         layout="wide",
     )
@@ -845,13 +1244,20 @@ def run(root: str | Path | None = None) -> None:
             logo_path = root / "app" / "static" / "logo-dark.svg"
 
         if logo_path.exists():
-            st.image(str(logo_path), width=120)
+            logo_uri = _get_image_base64(logo_path)
+            if logo_uri:
+                st.markdown(
+                    f'<div style="margin-bottom:12px;"><img src="{logo_uri}" style="width:80px; max-width:80px; height:auto; display:block;" alt="BijliCast" /></div>',
+                    unsafe_allow_html=True,
+                )
+            else:
+                st.image(str(logo_path), width=80)
         else:
             st.markdown(
                 """
                 <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
                     <span style="font-size:20px;">⚡</span>
-                    <span style="font-size:18px; font-weight:800; color:#ffffff;">BijliCast</span>
+                    <span style="font-size:18px; font-weight:800; color:#FFFFFF;">BijliCast</span>
                 </div>
                 """,
                 unsafe_allow_html=True,
@@ -875,7 +1281,7 @@ def run(root: str | Path | None = None) -> None:
         # When on Predict page, show Household selector and Model Info
         if selected_page == "Predict":
             st.markdown(
-                "<span style='font-size:11px; font-weight:700; letter-spacing:0.1em; color:#8da4c4;'>HOUSEHOLD</span>",
+                "<span style='font-size:11px; font-weight:700; letter-spacing:0.1em; color:#8DA4C4;'>HOUSEHOLD</span>",
                 unsafe_allow_html=True,
             )
             labels = {
@@ -894,7 +1300,7 @@ def run(root: str | Path | None = None) -> None:
             st.divider()
 
             st.markdown(
-                "<span style='font-size:11px; font-weight:700; letter-spacing:0.1em; color:#8da4c4;'>MODEL</span>",
+                "<span style='font-size:11px; font-weight:700; letter-spacing:0.1em; color:#8DA4C4;'>MODEL</span>",
                 unsafe_allow_html=True,
             )
             st.markdown(f"**{model_info['name']}**")
@@ -920,11 +1326,11 @@ def run(root: str | Path | None = None) -> None:
         else:
             # On Home Page
             st.markdown(
-                "<span style='font-size:11px; font-weight:700; letter-spacing:0.1em; color:#8da4c4;'>SUMMARY</span>",
+                "<span style='font-size:11px; font-weight:700; letter-spacing:0.1em; color:#8DA4C4;'>OVERVIEW</span>",
                 unsafe_allow_html=True,
             )
             st.caption(
-                "BijliCast predicts next-hour household electricity demand across Pakistan without relying on future weather forecasts."
+                "BijliCast forecasts next-hour residential electricity demand in Pakistan with calibrated 90% uncertainty intervals."
             )
 
     # -------------------------------------------------------------
@@ -934,13 +1340,6 @@ def run(root: str | Path | None = None) -> None:
         render_home_page(root, service)
     else:
         render_predict_page(service)
-
-    # Footer
-    st.divider()
-    st.caption(
-        "Data: LUMS REWD-P (59 households) and Open-Meteo ERA5 (6 cities). "
-        "Predictions are for research and operational planning purposes."
-    )
 
 
 if __name__ == "__main__":
