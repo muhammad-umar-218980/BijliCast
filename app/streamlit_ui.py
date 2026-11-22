@@ -489,7 +489,7 @@ def render_home_page(root: Path, service) -> None:
         """
         <p class="saas-hero-desc">
             Next-hour residential electricity demand forecasting across Pakistan.
-            Powered by LUMS REWD-P smart-meter telemetry and real-time weather analytics—built to
+            Powered by LUMS REWD-P smart-meter telemetry and current-hour weather analytics—built to
             anticipate peak tariffs, mitigate load shedding uncertainty, and stabilize household power
             budgets without relying on future weather forecasts.
         </p>
@@ -525,9 +525,9 @@ def render_home_page(root: Path, service) -> None:
         st.markdown(
             """
             <div class="saas-kpi-card">
-                <div class="saas-kpi-val">408,048</div>
+                <div class="saas-kpi-val">480,209</div>
                 <div class="saas-kpi-label">Hourly Records</div>
-                <div class="saas-kpi-sub">Cleaned and temporally validated smart-meter rows across multi-year telemetry.</div>
+                <div class="saas-kpi-sub">Cleaned and temporally validated smart-meter rows across 16 months of telemetry.</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -549,7 +549,7 @@ def render_home_page(root: Path, service) -> None:
             <div class="saas-kpi-card">
                 <div class="saas-kpi-val">6</div>
                 <div class="saas-kpi-label">Pakistani Cities</div>
-                <div class="saas-kpi-sub">Lahore, Karachi, Islamabad, Faisalabad, Multan, and Peshawar covering diverse climate zones.</div>
+                <div class="saas-kpi-sub">Lahore, Karachi, Islamabad, Skardu, Multan, and Peshawar covering diverse climate zones.</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -638,7 +638,7 @@ def render_home_page(root: Path, service) -> None:
                 <span class="saas-step-num">STAGE 01</span>
                 <div class="saas-step-title">Current Weather Ingestion</div>
                 <p class="saas-step-desc">
-                    Captures 8 real-time ambient inputs from ERA5: temperature, relative humidity, dew point, solar irradiance,
+                    Captures 8 current-hour ambient inputs from ERA5: temperature, relative humidity, dew point, solar irradiance,
                     pressure, precipitation, and trigonometric wind components. No forward weather predictions are ingested.
                 </p>
             </div>
@@ -683,7 +683,7 @@ def render_home_page(root: Path, service) -> None:
     st.markdown('<div class="saas-eyebrow">RIGOROUS EVALUATION</div>', unsafe_allow_html=True)
     st.markdown('<h2 class="saas-heading">Benchmark-Beating Model Performance</h2>', unsafe_allow_html=True)
     st.markdown(
-        '<p class="saas-lead">Evaluated strictly on chronological, unseen held-out test splits across 72,059 validation rows.</p>',
+        '<p class="saas-lead">Evaluated strictly on a chronological, unseen held-out test split of 72,059 rows.</p>',
         unsafe_allow_html=True,
     )
 
@@ -732,7 +732,7 @@ def render_home_page(root: Path, service) -> None:
     with perf_chart:
         eval_img_path = root / "reports" / "figures" / "11_test_actual_vs_predicted.png"
         if eval_img_path.exists():
-            st.image(str(eval_img_path), caption="Held-out Test Evaluation: Actual vs. Predicted Next-Hour Consumption", use_container_width=True)
+            st.image(str(eval_img_path), caption="Random Forest (validation-selected model): actual vs. predicted on the held-out test set", use_container_width=True)
         else:
             st.info("Evaluation chart reports/figures/11_test_actual_vs_predicted.png will be displayed here.")
 
@@ -791,7 +791,7 @@ def render_home_page(root: Path, service) -> None:
             <div class="saas-eyebrow" style="color:#F8AF90;">READY TO FORECAST</div>
             <h2>Your next hour, better understood.</h2>
             <p>
-                Explore real-time next-hour electricity consumption forecasts across 59 Pakistani households,
+                Explore next-hour electricity consumption forecasts across 59 Pakistani households,
                 simulate what-if weather variations, and inspect detailed appliance profiles.
             </p>
         </div>
