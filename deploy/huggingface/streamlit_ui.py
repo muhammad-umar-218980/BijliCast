@@ -83,13 +83,20 @@ def _fmt(value, spec: str = "%.0f") -> str:
 
 
 def _get_image_base64(path: Path) -> str:
-    """Return base64 data URI for embedding local images into CSS."""
+    """Return base64 data URI for embedding local images into CSS and HTML."""
     if path.exists():
         try:
             with open(path, "rb") as f:
                 data = base64.b64encode(f.read()).decode("utf-8")
             suffix = path.suffix.lower().replace(".", "")
-            mime = "jpeg" if suffix in ("jpg", "jpeg") else ("webp" if suffix == "webp" else "png")
+            if suffix == "svg":
+                mime = "svg+xml"
+            elif suffix in ("jpg", "jpeg"):
+                mime = "jpeg"
+            elif suffix == "webp":
+                mime = "webp"
+            else:
+                mime = "png"
             return f"data:image/{mime};base64,{data}"
         except Exception:
             return ""
@@ -840,7 +847,7 @@ def render_predict_page(service) -> None:
     # Top Header for Predict (no boxed border)
     st.markdown(
         f"""
-        <div style="padding:14px 0 20px 0;">
+        <div style="padding: 42px 0 20px 0;">
             <div class="saas-eyebrow">MAKE A PREDICTION</div>
             <h2 style="font-size:32px; font-weight:850; color:#FFFFFF; margin:0 0 8px 0;">Next hour for {house}, {city}</h2>
             <div style="color:#CBD5E1; font-size:14.5px; margin-bottom:14px;">
